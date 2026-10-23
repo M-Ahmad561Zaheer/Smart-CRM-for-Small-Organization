@@ -1,0 +1,43 @@
+.page { margin: auto; padding: 24px 20px; }
+.login-page { max-width: 470px; }
+.card { background: white; border: 1px solid #d7dfec; border-radius: 16px; }
+.login-card { padding: 38px 38px 36px; text-align: center; box-shadow: 0 8px 28px #233b6010; }
+.brand { color: #084bce; margin-bottom: 27px; }
+h1 { font-size: 30px; letter-spacing: -.7px; line-height: 1.25; margin: 0 0 12px; font-weight: 600; }
+.subtitle { color: #484b60; font-size: 18px; line-height: 1.4; margin: 0; }
+form { text-align: left; margin-top: 48px; }
+.field { margin-bottom: 28px; }
+.field label { display: block; color: #484b60; font-size: 15px; font-weight: 600; letter-spacing: .5px; margin: 0 4px 10px; }
+.input-wrap { display: flex; align-items: center; gap: 12px; height: 60px; padding: 0 16px; border: 1px solid #bec1d8; border-radius: 10px; background: #f2f3f5; color: #494c5c; }
+.input-wrap:focus-within { border-color: #0052d8; box-shadow: 0 0 0 3px #0052d815; }
+.input-wrap svg { flex-shrink: 0; }
+input:not([type=checkbox]), select { background: transparent; color: #202326; width: 100%; min-width: 0; border: 0; outline: 0; font-size: 20px; height: 100%; }
+input::placeholder { color: #a9acb7; opacity: 1; }
+.password-field { position: relative; }
+.text-link { border: 0; padding: 0; background: transparent; color: #0053e5; font-size: 15px; font-weight: 600; letter-spacing: .4px; }
+.forgot { position: absolute; right: 4px; top: 0; }
+.remember { display: flex; align-items: center; gap: 14px; color: #484b60; font-size: 17px; margin: 0 4px 28px; cursor: pointer; }
+.remember input { appearance: none; width: 24px; height: 24px; border: 1px solid #bcc2db; border-radius: 5px; margin: 0; flex-shrink: 0; }
+.remember input:checked { background: #064bcb; border-color: #064bcb; }
+.remember input:checked::after { content: '✓'; display: block; text-align: center; color: white; }
+.primary { display: flex; justify-content: center; align-items: center; gap: 10px; width: 100%; height: 72px; border: none; border-radius: 10px; background: #064bcb; color: white; font-size: 25px; box-shadow: 0 3px 5px #0002; }
+.primary:hover { background: #003eaf; }
+.divider { display: flex; align-items: center; gap: 28px; font-size: 13px; letter-spacing: 1.3px; color: #414558; white-space: nowrap; margin: 78px 0 38px; }
+.divider span { height: 1px; background: #bec3d9; flex: 1; }
+.google { background: white; border: 1px solid #bcc2db; border-radius: 9px; width: 100%; height: 51px; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 15px; font-weight: 600; color: #202326; }
+.google-g { font-size: 21px; font-weight: 700; color: #4285f4; }
+.footer { font-size: 13px; color: #373d53; margin: 48px 0 0; }
+.workspace-page { max-width: 562px; padding: 26px 22px 22px; }
+.back-link { display: flex; gap: 26px; align-items: center; font-size: 23px; font-weight: 600; margin: 0 8px 62px; }
+.workspace-card { border-color: #bec1d8; padding: 30px 29px 46px; box-shadow: 0 1px 2px #0001; }
+.workspace-card h1 { font-weight: 700; }
+.workspace-card .subtitle { font-size: 20px; line-height: 1.45; }
+.workspace-card form { margin-top: 40px; }
+.workspace-card .field { margin-bottom: 32px; }
+.workspace-card .field label { font-size: 20px; font-weight: 400; letter-spacing: 0; margin-bottom: 12px; }
+.workspace-card .input-wrap { height: 58px; background: #f7f8fa; color: #777c8e; border-radius: 9px; }
+.workspace-card input::placeholder { color: #c1c5dc; }
+.workspace-card .primary { margin-top: 48px; height: 68px; font-size: 20px; border-radius: 14px; }
+.notice { font-size: 14px; line-height: 1.5; color: #344d79; padding: 12px; border-radius: 8px; background: #eff5ff; text-align: left; }
+@media (max-width: 480px) { .page { padding-top: 7px; } .workspace-page { padding-top: 26px; } .workspace-card { padding: 28px 24px 38px; } .workspace-card .subtitle { font-size: 18px; } }
+@media (max-width: 380px) { .login-card { padding: 32px 22px; } .forgot { font-size: 13px; } .remember { font-size: 14px; } .divider { gap: 15px; } .workspace-card { padding-inline: 20px; } h1 { font-size: 27px; } }
