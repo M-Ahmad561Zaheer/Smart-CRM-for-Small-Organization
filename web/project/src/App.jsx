@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import './App.css'
+import SchoolDashboard from './dashboard/SchoolDashboard'
 const paths = {
 mail: 'M3 5h18v14H3z M3 6l9 7 9-7',
 lock: 'M5 10h14v11H5z M8 10V6a4 4 0 0 1 8 0v4 M12 14v3',
@@ -14,8 +15,11 @@ function Field({ label, icon, children, ...props }) { return <div className="fie
 export default function App() {
 const [workspace, setWorkspace] = useState(location.hash === '#create-workspace')
 const [notice, setNotice] = useState('')
+const [dashboard, setDashboard] = useState(location.hash === '#school-dashboard')
+useEffect(() => { const update = () => setDashboard(location.hash === '#school-dashboard'); window.addEventListener('hashchange', update); return () => window.removeEventListener('hashchange', update) }, [])
 useEffect(() => { const update = () => { setWorkspace(location.hash === '#create-workspace'); setNotice('') }; window.addEventListener('hashchange', update); return () => window.removeEventListener('hashchange', update) }, [])
 function submit(event) { event.preventDefault(); setNotice(workspace ? 'Your workspace details are ready. Workspace creation will be available when the service is connected.' : 'Your details are ready. Sign-in will be available when the service is connected.') }
+if (dashboard) return <SchoolDashboard />
 return <main className={workspace ? 'page workspace-page' : 'page login-page'}>
 {workspace && <a href="#login" className="back-link"><Icon name="back" />Create Workspace</a>}
 <section className={workspace ? 'card workspace-card' : 'card login-card'} aria-labelledby="title">
@@ -32,5 +36,6 @@ return <main className={workspace ? 'page workspace-page' : 'page login-page'}>
 </form>
 {notice && <p className="notice" role="status">{notice}</p>}
 {!workspace && <><div className="divider"><span />OR CONTINUE WITH<span /></div><button className="google" onClick={() => setNotice('Google sign-in will be available when the service is connected.')}><span className="google-g">G</span>Sign in with Google</button><p className="footer">Don’t have a workspace? <a href="#create-workspace">Create one</a></p></>}
+<p className="footer"><a href="#school-dashboard">Preview School Dashboard</a></p>
 </section></main>
 }

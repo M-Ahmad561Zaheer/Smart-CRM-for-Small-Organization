@@ -66,6 +66,7 @@ export default function AuthScreen({ workspace = false }: { workspace?: boolean 
         </View>
         {!!notice && <Text accessibilityRole="alert" accessibilityLiveRegion="polite" style={s.notice}>{notice}</Text>}
         {!workspace && <><View style={s.divider}><View style={s.line} /><Text style={s.dividerText}>OR CONTINUE WITH</Text><View style={s.line} /></View><Pressable accessibilityRole="button" style={s.google} onPress={() => setNotice('Google sign-in will be available when the service is connected.')}><Text style={s.googleG}>G</Text><Text style={s.googleText}>Sign in with Google</Text></Pressable><View style={s.footer}><Text style={s.footerText}>Don’t have a workspace? </Text><Pressable accessibilityRole="link" hitSlop={8} onPress={() => router.push('./create-workspace')}><Text style={[s.footerText, { color: '#0054ed' }]}>Create one</Text></Pressable></View></>}
+        <Pressable accessibilityRole="link" style={{ marginTop: 24, alignItems: 'center' }} onPress={() => router.push('./school-dashboard')}><Text style={s.link}>Preview School Dashboard</Text></Pressable>
       </View>
     </ScrollView>
   </KeyboardAvoidingView></SafeAreaView>;
