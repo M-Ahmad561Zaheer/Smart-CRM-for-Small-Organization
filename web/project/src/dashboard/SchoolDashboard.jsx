@@ -31,6 +31,7 @@ export default function SchoolDashboard() {
   const [panel, setPanel] = useState(null)
   const series = data[period]
   function open(name) {
+    if (name === 'Students' || name === 'Tasks') { location.hash = '#students'; return }
     if (name === 'Timetable') {
       setPanel(null)
       setExpanded(true)

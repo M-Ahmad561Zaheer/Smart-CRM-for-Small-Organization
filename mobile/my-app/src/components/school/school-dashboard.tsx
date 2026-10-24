@@ -25,6 +25,7 @@ export default function SchoolDashboard() {
   const scheduleY = useRef(0);
   const series = data[period];
   function open(name: string) {
+    if (name === 'Students' || name === 'Tasks') { setPanel(null); router.push('./students'); return; }
     if (name === 'Timetable') {
       setPanel(null);
       setExpanded(true);
