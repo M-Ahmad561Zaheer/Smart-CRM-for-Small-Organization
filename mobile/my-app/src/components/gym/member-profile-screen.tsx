@@ -259,8 +259,13 @@ export default function MemberProfileScreen({
           <Pressable
             style={s.renewButton}
             onPress={() =>
-              placeholder("Renew Membership")
-            }
+  router.push({
+    pathname: "/gym-renewal",
+    params: {
+      memberId: member.id,
+    },
+  })
+}
           >
             <Icon
               name="renew"

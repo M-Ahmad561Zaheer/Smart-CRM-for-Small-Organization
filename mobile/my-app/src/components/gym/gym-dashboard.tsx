@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import {
   View,
@@ -19,6 +18,7 @@ import {
   membershipGrowth,
   recentCheckIns,
 } from "./gym-data";
+import { router } from "expo-router";
 
 const BLUE = "#0755D7";
 
@@ -122,17 +122,33 @@ export default function GymDashboard() {
     );
   }
 
-  function handleAction(name: string) {
-    if (name === "Members") {
-      preview("Gym Members");
-    } else if (name === "Membership Renewal") {
-      preview("Membership Renewal");
-    } else if (name === "Training Sessions") {
-      preview("Training Sessions");
-    } else {
-      preview("Gym Reports");
-    }
+
+function handleAction(name: string) {
+  // Gym Members Directory
+  if (name === "Members") {
+    router.push("/gym-members");
+    return;
   }
+
+  // Membership Renewal
+  if (name === "Membership Renewal") {
+    router.push("/gym-renewal");
+    return;
+  }
+
+  // Gym Reports
+  if (name === "Reports") {
+    router.push("/gym-reports");
+    return;
+  }
+
+  // Training Sessions - future screen
+  if (name === "Training Sessions") {
+    preview("Training Sessions");
+    return;
+  }
+}
+
 
   const bottomItems = [
     { label: "Dashboard", icon: "dashboard" },
@@ -480,9 +496,11 @@ export default function GymDashboard() {
 
       {/* Floating Add Button */}
       <Pressable
-        style={s.floatingAdd}
-        onPress={() => preview("Quick Add")}
-      >
+  style={s.floatingAdd}
+  onPress={() => router.push("/gym-add-member")}
+  accessibilityRole="button"
+  accessibilityLabel="Add new gym member"
+>
         <GymIcon
           name="plus"
           size={27}
