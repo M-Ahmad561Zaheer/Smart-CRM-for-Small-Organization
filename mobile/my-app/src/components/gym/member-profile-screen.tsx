@@ -256,26 +256,27 @@ export default function MemberProfileScreen({
             {details.joinedDate}
           </Text>
 
-          <Pressable
+         <Pressable
             style={s.renewButton}
             onPress={() =>
-  router.push({
-    pathname: "/gym-renewal",
-    params: {
-      memberId: member.id,
-    },
-  })
-}
-          >
+                router.push({
+                pathname: "/gym-renewal",
+                params: {
+                    memberId: member.id,
+                },
+                })
+            }
+            >
             <Icon
-              name="renew"
-              size={16}
-              color="#FFFFFF"
+                name="renew"
+                size={16}
+                color="#FFFFFF"
             />
+
             <Text style={s.renewText}>
-              Renew Membership
+                Renew Membership
             </Text>
-          </Pressable>
+            </Pressable>
 
           <Pressable
             style={s.scheduleButton}
