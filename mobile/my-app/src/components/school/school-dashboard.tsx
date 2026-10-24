@@ -7,6 +7,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import icons from './icons.json';
 import data from './demo-data.json';
 
+
 const blue = '#0050d5';
 type IconName = keyof typeof icons;
 function Icon({ name, color = blue, size = 22 }: { name: string; color?: string; size?: number }) {
@@ -24,14 +25,44 @@ export default function SchoolDashboard() {
   const scroll = useRef<ComponentRef<typeof ScrollView>>(null);
   const scheduleY = useRef(0);
   const series = data[period];
-  function open(name: string) {
-    if (name === 'Students' || name === 'Tasks') { setPanel(null); router.push('./students'); return; }
-    if (name === 'Timetable') {
-      setPanel(null);
-      setExpanded(true);
-      scroll.current?.scrollTo({ y: scheduleY.current, animated: true });
-    } else setPanel(name);
+  
+function open(name: string) {
+  // Students / Tasks
+  if (name === 'Students' || name === 'Tasks') {
+    setPanel(null);
+    router.push('./students');
+    return;
   }
+
+  // Fee Management
+  if (name === 'Fee Mgt') {
+    setPanel(null);
+    router.push('/fee-management');
+    return;
+  }
+
+  // Reports
+  if (name === 'Reports') {
+    setPanel(null);
+    router.push('/reports');
+    return;
+  }
+
+  // Timetable
+  if (name === 'Timetable') {
+    setPanel(null);
+    setExpanded(true);
+    scroll.current?.scrollTo({
+      y: scheduleY.current,
+      animated: true,
+    });
+    return;
+  }
+
+  // Existing modal functionality
+  setPanel(name);
+}
+
   const menuOptions = panel === 'Menu' ? ['Students', 'Fee Mgt', 'Reports', 'Timetable', 'Profile'] : ['Students', 'Fee Mgt', 'Timetable'];
   return <SafeAreaView style={s.safe}>
     <View style={s.header}>
