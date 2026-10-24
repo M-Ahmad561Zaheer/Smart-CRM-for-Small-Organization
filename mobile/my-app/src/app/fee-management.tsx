@@ -7,7 +7,7 @@ import {
   Pressable,
 } from "react-native";
 import { Stack, router } from "expo-router";
-import { Ionicons } from "@expo/vector-icons";
+import Ionicons from "@expo/vector-icons/Ionicons";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import FeeManagementScreen from "@/components/school/fee-management-screen";
