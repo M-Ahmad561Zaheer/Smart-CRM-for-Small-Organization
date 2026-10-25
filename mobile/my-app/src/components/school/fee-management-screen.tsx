@@ -6,7 +6,6 @@ import {
   ScrollView,
   StyleSheet,
   Pressable,
-  TextInput,
   Alert,
 } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -155,8 +154,6 @@ export default function FeeManagementScreen() {
   const [filter, setFilter] = useState<
     "All" | "Paid" | "Pending" | "Overdue"
   >("All");
-  const [searchVisible, setSearchVisible] = useState(false);
-  const [search, setSearch] = useState("");
   const [activeBottom, setActiveBottom] =
     useState("Contacts");
 
@@ -165,15 +162,9 @@ export default function FeeManagementScreen() {
       const matchesStatus =
         filter === "All" || item.status === filter;
 
-      const query = search.trim().toLowerCase();
-
-      const matchesSearch =
-        item.id.toLowerCase().includes(query) ||
-        item.client.toLowerCase().includes(query);
-
-      return matchesStatus && matchesSearch;
+      return matchesStatus;
     });
-  }, [filter, search]);
+  }, [filter]);
 
   const totalPages = Math.max(
     1,

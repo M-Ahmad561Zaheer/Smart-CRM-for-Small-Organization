@@ -293,7 +293,7 @@ function handleAction(name: string) {
             <View style={s.periodOptions}>
               {(Object.keys(
                 revenuePeriods
-              ) as Array<keyof typeof revenuePeriods>).map(
+              ) as (keyof typeof revenuePeriods)[]).map(
                 (option) => (
                   <Pressable
                     key={option}

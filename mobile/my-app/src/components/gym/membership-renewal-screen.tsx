@@ -280,7 +280,7 @@ export default function MembershipRenewalScreen() {
           <View style={s.infoContent}>
             <Text style={s.infoText}>
               A payment reminder and renewal alert can
-              be sent to the member's registered email
+              be sent to the member&apos;s registered email
               and mobile app notification center.
             </Text>
 

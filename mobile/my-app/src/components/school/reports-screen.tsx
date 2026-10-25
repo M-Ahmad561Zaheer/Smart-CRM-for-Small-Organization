@@ -371,13 +371,8 @@ function PaymentBadge({
 // ------------------------------
 
 function RecentPayments() {
-  const [showAll, setShowAll] =
-    React.useState(false);
-
   // Ready for additional mock records or API data.
-  const visiblePayments = showAll
-    ? payments
-    : payments.slice(0, 3);
+  const visiblePayments = payments.slice(0, 3);
 
   return (
     <View style={styles.section}>
