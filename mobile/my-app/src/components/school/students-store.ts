@@ -14,3 +14,11 @@ export function addStudent(student: Omit<Student, 'tone'>) {
   listeners.forEach(listener => listener());
   return true;
 }
+
+export const getStudent = (id: string) => students.find(student => student.id === id);
+export function updateStudent(id: string, fields: Partial<Omit<Student, 'id'>>) {
+  if (!getStudent(id)) return false;
+  students = students.map(student => student.id === id ? { ...student, ...fields, id } : student);
+  listeners.forEach(listener => listener());
+  return true;
+}

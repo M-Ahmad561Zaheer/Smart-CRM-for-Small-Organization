@@ -1,19 +1,13 @@
-import { useSyncExternalStore } from 'react';
-import initial from './profile-data.json';
-let state = initial;
-const listeners = new Set<() => void>();
-const subscribe = (listener: () => void) => { listeners.add(listener); return () => { listeners.delete(listener); }; };
-export const getProfileSnapshot = () => state;
-export function useProfile() { return useSyncExternalStore(subscribe, getProfileSnapshot, getProfileSnapshot); }
-export function updateProfile(fields: Partial<typeof initial.student>) {
-  if (Object.values(fields).some(value => !value.trim())) return false;
-  state = { ...state, student: { ...state.student, ...fields } };
-  listeners.forEach(listener => listener());
-  return true;
+import { useStudents, getStudent, updateStudent } from './students-store';
+export type ProfileFields = { name: string; grade: string; address: string; guardian: string; phone: string; email: string };
+const details = new Map<string, Partial<ProfileFields>>();
+export function getProfileSnapshot(id: string) {
+  const student = getStudent(id);
+  return student ? { student: { address: '', guardian: '', phone: '', email: '', ...details.get(id), ...student } } : null;
 }
-export function recordPayment(id: string) {
-  if (!state.fees.some(fee => fee.id === id && fee.status === 'Pending')) return false;
-  state = { ...state, fees: state.fees.map(fee => fee.id === id ? { ...fee, status: 'Paid' } : fee) };
-  listeners.forEach(listener => listener());
-  return true;
+export function useProfile(id: string) { useStudents(); return getProfileSnapshot(id); }
+export function updateProfile(id: string, fields: ProfileFields) {
+  if (!getStudent(id) || !fields.name.trim() || !fields.grade.trim()) return false;
+  details.set(id, fields);
+  return updateStudent(id, { name: fields.name.trim(), grade: fields.grade.trim() });
 }

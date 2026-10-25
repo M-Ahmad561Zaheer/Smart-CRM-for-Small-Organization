@@ -1,19 +1,14 @@
-import { useSyncExternalStore } from 'react'
-import initial from './profile-data.json'
-let state = initial
-const listeners = new Set()
-const subscribe = listener => { listeners.add(listener); return () => listeners.delete(listener) }
-export const getProfileSnapshot = () => state
-export function useProfile() { return useSyncExternalStore(subscribe, getProfileSnapshot, getProfileSnapshot) }
-export function updateProfile(fields) {
-  if (Object.values(fields).some(value => !value.trim())) return false
-  state = { ...state, student: { ...state.student, ...fields } }
-  listeners.forEach(listener => listener())
-  return true
+import { useStudents, getStudent, updateStudent } from './students-store'
+// Each student's optional details are isolated by ID for this demo session.
+const details = new Map()
+const empty = { birthDate: '', address: '', guardian: '', phone: '', email: '' }
+export function getProfileSnapshot(id) {
+  const student = getStudent(id)
+  return student ? { student: { ...empty, ...details.get(id), ...student } } : null
 }
-export function recordPayment(id) {
-  if (!state.fees.some(fee => fee.id === id && fee.status === 'Pending')) return false
-  state = { ...state, fees: state.fees.map(fee => fee.id === id ? { ...fee, status: 'Paid' } : fee) }
-  listeners.forEach(listener => listener())
-  return true
+export function useProfile(id) { useStudents(); return getProfileSnapshot(id) }
+export function updateProfile(id, fields) {
+  if (!getStudent(id) || !fields.name?.trim() || !fields.grade?.trim()) return false
+  details.set(id, { ...details.get(id), ...fields })
+  return updateStudent(id, { name: fields.name.trim(), grade: fields.grade.trim() })
 }

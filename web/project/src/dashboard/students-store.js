@@ -15,3 +15,11 @@ export function addStudent(student) {
   listeners.forEach(listener => listener())
   return true
 }
+
+export const getStudent = id => students.find(student => student.id === id)
+export function updateStudent(id, fields) {
+  if (!getStudent(id)) return false
+  students = students.map(student => student.id === id ? { ...student, ...fields, id } : student)
+  listeners.forEach(listener => listener())
+  return true
+}

@@ -19,6 +19,8 @@
 .student-metric.attendance strong { color: #087d91; }
 .student-list { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
 .student-card { border: 1px solid #cdd2e3; border-radius: 12px; background: white; padding: 16px; box-shadow: 0 2px 4px #142f5010; min-width: 0; }
+.student-profile-link { display: block; color: inherit; }
+.student-profile-link:hover { border-color: #0752ce; background: #f8faff; }
 .student-card-top { display: flex; align-items: center; gap: 12px; }
 .student-avatar { width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; flex-shrink: 0; }
 .student-avatar.slate { background: #d5e3ff; color: #667384; }

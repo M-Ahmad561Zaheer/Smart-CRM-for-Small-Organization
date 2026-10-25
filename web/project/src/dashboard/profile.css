@@ -1,4 +1,6 @@
 .profile-main { max-width: 1000px; padding: 22px 16px 20px; margin: auto; display: grid; gap: 12px; }
+.selected-student-avatar { display: grid; place-items: center; width: 82px; height: 82px; border-radius: 50%; background: #dce8ff; color: #0752ce; font-size: 26px; margin-bottom: 18px; }
+.profile-shell .school-nav a { display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 4px; flex: 1; }
 .profile-shell .school-header h1 { font-size: 20px; }
 .profile-search { margin-left: auto; color: #263746; }
 .profile-header-icon { width: 30px; height: 30px; border-radius: 50%; background: #38424d; color: white; display: grid; place-items: center; }

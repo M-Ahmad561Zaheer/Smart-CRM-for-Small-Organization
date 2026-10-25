@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import './App.css'
 import SchoolDashboard from './dashboard/SchoolDashboard'
 import Students from './dashboard/Students'
+import StudentProfile from './dashboard/StudentProfile'
 import GymApp from './gym/GymApp'
 const paths = {
 mail: 'M3 5h18v14H3z M3 6l9 7 9-7',
@@ -23,6 +24,7 @@ useEffect(() => { const update = () => { setWorkspace(location.hash === '#create
 function submit(event) { event.preventDefault(); setNotice(workspace ? 'Your workspace details are ready. Workspace creation will be available when the service is connected.' : 'Your details are ready. Sign-in will be available when the service is connected.') }
 if (route === '#school-dashboard') return <SchoolDashboard />
 if (route === '#students') return <Students />
+if (route.startsWith('#student/')) return <StudentProfile key={route} studentId={route.slice('#student/'.length)} />
 if (route.startsWith('#gym-')) return <GymApp route={route} />
 return <main className={workspace ? 'page workspace-page' : 'page login-page'}>
 {workspace && <a href="#login" className="back-link"><Icon name="back" />Create Workspace</a>}
