@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
+import AddTeacher from './AddTeacher'
+import './timetable.css'
 import Icon from './SchoolIcon'
 import { addStudent, useStudents } from './students-store'
 import data from './demo-data.json'
@@ -51,7 +53,7 @@ export default function Students() {
       <section className="student-list" aria-label="Students">
         <div className="g-panel student-table-panel"><div className="g-table-wrap"><table><thead><tr><th>Student</th><th>Student ID</th><th>Grade</th><th>Fee status</th><th>Action</th></tr></thead><tbody>{filtered.map(student => <tr key={student.id}><td><a className="g-person" href={`#student/${student.id}`} aria-label={`View profile for ${student.name}, ${student.id}`}><span className={'student-avatar ' + student.tone}><Icon name="profile" size={21}/></span><strong>{student.name}</strong></a></td><td>{student.id}</td><td>{student.grade}</td><td><span className={`g-badge ${student.status === 'Paid' ? 'good' : 'warn'}`}>{student.status}</span></td><td><a href={`#student/${student.id}`}>View profile →</a></td></tr>)}</tbody></table></div></div>
         {filtered.length === 0 && <div className="student-empty"><Icon name="search" size={30} /><h2>No students found</h2><p>Try another name, ID, or filter.</p></div>}
-        <button className="student-add-card" onClick={openAdd}><Icon name="addPerson" size={32} /><strong>Add New Student</strong><span>Quickly register a new attendee</span></button>
+        <div className="school-add-actions"><button className="student-add-card" onClick={openAdd}><Icon name="addPerson" size={32} /><strong>Add New Student</strong><span>Quickly register a new attendee</span></button><AddTeacher/><a className="g-button secondary" href="#school-timetable">Teacher Timetable</a></div>
       </section>
       <p className="school-sample-note">Sample records · New students stay in this session only</p>
     </main>

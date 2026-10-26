@@ -299,7 +299,7 @@ export default function GymMembersScreen() {
         </Pressable>
 
         <Text style={s.headerTitle}>
-          Gym Management
+          School · Gym Module
         </Text>
 
         <Pressable
@@ -549,7 +549,7 @@ export default function GymMembersScreen() {
               ]}
               onPress={() => {
                 if (item.label === "Dashboard") {
-                  router.replace("/gym-dashboard");
+                  router.replace("/school-dashboard");
                 } else if (!active) {
                   placeholder(item.label);
                 }

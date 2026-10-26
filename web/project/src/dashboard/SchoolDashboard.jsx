@@ -36,8 +36,7 @@ export default function SchoolDashboard() {
     if (name === 'Reports') { location.hash = '#school-reports'; return }
     if (name === 'Timetable') {
       setPanel(null)
-      setExpanded(true)
-      document.getElementById('school-schedule').scrollIntoView({ behavior: 'smooth', block: 'start' })
+      location.hash = '#school-timetable'
     } else setPanel(name)
   }
   return <div className="school-shell">

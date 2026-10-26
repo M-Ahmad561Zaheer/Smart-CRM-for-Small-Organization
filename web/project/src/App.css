@@ -1,4 +1,9 @@
 .page { margin: auto; padding: 24px 20px; }
+.workspace-modules { border: 1px solid #d7dfec; border-radius: 10px; padding: 18px; margin: 0 0 28px; }
+.workspace-modules legend { color: #064bcb; font-weight: 600; }
+.workspace-modules label { display: flex; align-items: center; gap: 10px; padding: 10px 0; color: #484b60; }
+.workspace-modules input { width: 20px; height: 20px; accent-color: #064bcb; }
+.workspace-modules p { font-size: 12px; color: #68758b; line-height: 1.6; }
 .login-page { max-width: 470px; }
 .card { background: white; border: 1px solid #d7dfec; border-radius: 16px; }
 .login-card { padding: 38px 38px 36px; text-align: center; box-shadow: 0 8px 28px #233b6010; }

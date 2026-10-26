@@ -1,3 +1,4 @@
+import { gymFeatures, useWorkspace } from '../workspace-store';
 import { useRef, useState } from 'react';
 import type { ComponentRef } from 'react';
 import { Image } from 'expo-image';
@@ -18,6 +19,7 @@ const ringSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180"><
 const sections: Record<string, string[]> = data.sections;
 
 export default function SchoolDashboard() {
+  const workspace = useWorkspace();
   const [period, setPeriod] = useState<'monthly' | 'weekly'>('monthly');
   const [selected, setSelected] = useState(5);
   const [expanded, setExpanded] = useState(false);
@@ -51,11 +53,7 @@ function open(name: string) {
   // Timetable
   if (name === 'Timetable') {
     setPanel(null);
-    setExpanded(true);
-    scroll.current?.scrollTo({
-      y: scheduleY.current,
-      animated: true,
-    });
+    router.push('/teacher-timetable');
     return;
   }
 
@@ -71,6 +69,8 @@ function open(name: string) {
       <Pressable accessibilityRole="button" accessibilityLabel="Open administrator profile" style={s.avatar} onPress={() => open('Profile')}><Text style={s.avatarText}>SA</Text></Pressable>
     </View>
     <ScrollView ref={scroll} contentContainerStyle={s.content}>
+      <Text style={s.caption}>{workspace.name} · School workspace</Text>
+      {workspace.gym && <View style={s.panel}><Text style={s.panelTitle}>Gym Module</Text>{gymFeatures.filter(item => workspace.features.includes(item.id)).map(item => <Pressable key={item.id} accessibilityRole="link" style={s.menuItem} onPress={() => router.push(item.route)}><Text style={s.link}>{item.label}</Text><Text style={s.link}>→</Text></Pressable>)}</View>}
       <View style={s.stats}>{data.stats.map((stat, index) => <View style={s.stat} key={stat.label}><Text style={s.statLabel}>{stat.label}</Text><View style={s.statValueRow}><Text style={[s.statValue, index === 2 && { color: '#d70719' }]}>{stat.value}</Text><Icon name={stat.icon} color={index === 2 ? '#d70719' : '#087c8d'} /></View></View>)}</View>
       <View style={s.actions}><Text style={s.actionsTitle}>QUICK ACTIONS</Text><View style={s.actionRow}>{data.actions.map((action, index) => <Pressable accessibilityRole="button" style={s.action} key={action.label} onPress={() => open(action.label)}><View style={[s.actionIcon, index === 0 && s.selectedAction]}><Icon name={action.icon} color={index === 0 ? 'white' : blue} /></View><Text style={s.actionLabel}>{action.label}</Text></Pressable>)}</View></View>
       <View style={s.panel}>

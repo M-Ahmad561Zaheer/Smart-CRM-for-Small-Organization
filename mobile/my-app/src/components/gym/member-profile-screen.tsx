@@ -207,7 +207,7 @@ export default function MemberProfileScreen({
         </Pressable>
 
         <Text style={s.headerTitle}>
-          Gym Management
+          School · Gym Module
         </Text>
 
         <View style={s.headerAvatar}>
@@ -466,7 +466,7 @@ export default function MemberProfileScreen({
               ]}
               onPress={() => {
                 if (item.label === "Dashboard") {
-                  router.replace("/gym-dashboard");
+                  router.replace("/school-dashboard");
                 } else if (!selected) {
                   placeholder(item.label);
                 }

@@ -208,7 +208,7 @@ export default function MembershipRenewalScreen() {
         </Pressable>
 
         <Text style={s.headerTitle}>
-          Gym Management
+          School · Gym Module
         </Text>
 
         <View style={s.headerAvatar}>

@@ -1,3 +1,4 @@
+import GymFeatureGate from '@/components/gym-feature-gate';
 
 import React from "react";
 import { Stack } from "expo-router";
@@ -8,7 +9,7 @@ export default function GymRenewalPage() {
   return (
     <>
       <Stack.Screen options={{ headerShown: false }} />
-      <MembershipRenewalScreen />
+      <GymFeatureGate feature="renewal"><MembershipRenewalScreen /></GymFeatureGate>
     </>
   );
 }

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { router } from 'expo-router';
 import { FlatList, KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import AddTeacherButton from './add-teacher-button';
 import Icon from './school-icon';
 import { addStudent, useStudents } from './students-store';
 import data from './demo-data.json';
@@ -53,7 +54,7 @@ export default function StudentsScreen() {
       </>}
       renderItem={({ item }) => <Pressable accessibilityRole="button" accessibilityLabel={`View profile for ${item.name}, ${item.id}`} onPress={() => router.push({ pathname: "/student/[id]", params: { id: item.id } })} style={s.card}><View style={s.cardTop}><View style={[s.studentAvatar, { backgroundColor: tones[item.tone].backgroundColor }]}><Icon name="profile" color={tones[item.tone].color} size={23} /></View><View style={s.identity}><Text style={s.studentName}>{item.name}</Text><Text style={s.studentId}>ID: {item.id}</Text></View><Text style={[s.badge, item.status === 'Paid' ? s.paid : s.pending]}>{item.status.toUpperCase()}</Text></View><View style={s.grade}><Icon name="students" size={14} color="#424c61" /><Text style={s.gradeText}>Grade: {item.grade}</Text></View></Pressable>}
       ListEmptyComponent={<View style={s.empty}><Icon name="search" color="#69758a" size={30} /><Text style={s.emptyTitle}>No students found</Text><Text style={s.note}>Try another name, ID, or filter.</Text></View>}
-      ListFooterComponent={<><Pressable accessibilityRole="button" style={s.addCard} onPress={openAdd}><Icon name="addPerson" color="#778092" size={32} /><Text style={s.addTitle}>Add New Student</Text><Text style={s.addCaption}>Quickly register a new attendee</Text></Pressable><Text style={s.sample}>Sample records · New students stay in this session only</Text></>}
+      ListFooterComponent={<><View style={{ flexDirection: 'row', gap: 10, alignItems: 'center' }}><View style={{ flex: 1 }}><Pressable accessibilityRole="button" style={s.addCard} onPress={openAdd}><Icon name="addPerson" color="#778092" size={32} /><Text style={s.addTitle}>Add New Student</Text><Text style={s.addCaption}>Quickly register a new attendee</Text></Pressable></View><View style={{ flex: 1 }}><AddTeacherButton/></View></View><Pressable accessibilityRole="link" style={{ padding: 16, alignItems: 'center' }} onPress={() => router.push('/teacher-timetable')}><Text style={s.link}>Teacher Timetable →</Text></Pressable><Text style={s.sample}>Sample records · New students stay in this session only</Text></>}
     />
     <Pressable accessibilityRole="button" accessibilityLabel="Add new student" style={s.floatingAdd} onPress={openAdd}><Icon name="plus" color="white" size={26} /></Pressable>
     <View style={s.nav}>{['Dashboard', 'Tasks', 'Alerts', 'Profile'].map(item => <Pressable accessibilityRole="button" accessibilityState={{ selected: item === 'Tasks' }} key={item} style={[s.navButton, item === 'Tasks' && s.activeNav]} onPress={() => item === 'Dashboard' ? router.replace('./school-dashboard') : item === 'Tasks' ? clear() : setPanel(item)}><Icon name={item.toLowerCase()} color={item === 'Tasks' ? 'white' : '#51586a'} size={21} /><Text style={[s.navText, item === 'Tasks' && { color: 'white' }]}>{item}</Text></Pressable>)}</View>

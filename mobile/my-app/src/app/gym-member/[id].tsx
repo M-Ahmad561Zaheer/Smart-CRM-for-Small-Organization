@@ -1,3 +1,4 @@
+import GymFeatureGate from '@/components/gym-feature-gate';
 
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
@@ -27,10 +28,10 @@ export default function GymMemberProfilePage() {
   return (
     <>
       <Stack.Screen options={{ headerShown: false }} />
-      <MemberProfileScreen
+      <GymFeatureGate feature="members"><MemberProfileScreen
         key={member.id}
         member={member}
-      />
+      /></GymFeatureGate>
     </>
   );
 }

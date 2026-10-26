@@ -174,7 +174,7 @@ function handleAction(name: string) {
         </Pressable>
 
         <Text style={s.headerTitle}>
-          Gym Management
+          School · Gym Module
         </Text>
 
         <Pressable

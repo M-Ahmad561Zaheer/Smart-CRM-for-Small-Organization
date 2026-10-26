@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import './App.css'
 import SchoolWorkspace from './dashboard/SchoolWorkspace'
-import GymApp from './gym/GymApp'
+import { gymFeatures, saveWorkspace } from './workspace-store'
 const paths = {
 mail: 'M3 5h18v14H3z M3 6l9 7 9-7',
 lock: 'M5 10h14v11H5z M8 10V6a4 4 0 0 1 8 0v4 M12 14v3',
@@ -15,13 +15,15 @@ function Icon({ name, size = 24 }) { return <svg width={size} height={size} view
 function Field({ label, icon, children, ...props }) { return <div className="field"><label htmlFor={props.id}>{label}</label><div className="input-wrap"><Icon name={icon} />{children || <input {...props} required />}</div></div> }
 export default function App() {
 const [workspace, setWorkspace] = useState(location.hash === '#create-workspace')
+const [gym, setGym] = useState(false)
+const [features, setFeatures] = useState([])
 const [notice, setNotice] = useState('')
 const [route, setRoute] = useState(location.hash)
 useEffect(() => { const update = () => { setRoute(location.hash); window.scrollTo(0, 0) }; window.addEventListener('hashchange', update); return () => window.removeEventListener('hashchange', update) }, [])
 useEffect(() => { const update = () => { setWorkspace(location.hash === '#create-workspace'); setNotice('') }; window.addEventListener('hashchange', update); return () => window.removeEventListener('hashchange', update) }, [])
-function submit(event) { event.preventDefault(); setNotice(workspace ? 'Your workspace details are ready. Workspace creation will be available when the service is connected.' : 'Your details are ready. Sign-in will be available when the service is connected.') }
+function submit(event) { event.preventDefault(); if (workspace) { if (!saveWorkspace(event.currentTarget.querySelector('#business').value, gym, features)) { setNotice('Select at least one Gym feature.'); return }; location.hash = '#school-dashboard'; return }; setNotice(workspace ? 'Your workspace details are ready. Workspace creation will be available when the service is connected.' : 'Your details are ready. Sign-in will be available when the service is connected.') }
 if (route.startsWith('#school-') || route === '#students' || route.startsWith('#student/')) return <SchoolWorkspace route={route} />
-if (route.startsWith('#gym-')) return <GymApp route={route} />
+if (route.startsWith('#gym-')) return <SchoolWorkspace route={route === '#gym-dashboard' ? '#school-dashboard' : route} />
 return <main className={workspace ? 'page workspace-page' : 'page login-page'}>
 {workspace && <a href="#login" className="back-link"><Icon name="back" />Create Workspace</a>}
 <section className={workspace ? 'card workspace-card' : 'card login-card'} aria-labelledby="title">
@@ -29,9 +31,9 @@ return <main className={workspace ? 'page workspace-page' : 'page login-page'}>
 <h1 id="title">{workspace ? 'Workspace Setup' : 'Welcome Back'}</h1>
 <p className="subtitle">{workspace ? 'Configure your digital office to start managing your clients effectively.' : 'Please enter your credentials to access your dashboard.'}</p>
 <form onSubmit={submit} key={workspace ? 'workspace' : 'login'}>
-{workspace && <><Field label="Business Name" id="business" icon="store" placeholder="e.g. Acme Studio" autoComplete="organization" pattern=".*\S.*" /><Field label="Owner Name" id="owner" icon="user" placeholder="Full Name" autoComplete="name" pattern=".*\S.*" /></>}
+{workspace && <><Field label="School Name" id="business" icon="store" placeholder="e.g. Sunrise School" autoComplete="organization" pattern=".*\S.*" /><Field label="Owner Name" id="owner" icon="user" placeholder="Full Name" autoComplete="name" pattern=".*\S.*" /></>}
 <Field label="Email" id="email" icon="mail" type="email" placeholder={workspace ? 'name@business.com' : 'name@school.edu'} autoComplete="email" />
-{workspace && <Field label="Business Type" id="type" icon="type"><select id="type" defaultValue="School">{['School', 'Retail', 'Agency', 'Healthcare', 'Other'].map(type => <option key={type}>{type}</option>)}</select></Field>}
+{workspace && <fieldset className="workspace-modules"><legend>School workspace</legend><p>School features are included. Add optional Gym features below.</p><label><input type="checkbox" checked={gym} onChange={event => setGym(event.target.checked)}/>Add Gym module</label>{gym && <div>{gymFeatures.map(([id, label]) => <label key={id}><input type="checkbox" checked={features.includes(id)} onChange={event => setFeatures(previous => event.target.checked ? [...previous, id] : previous.filter(value => value !== id))}/>{label}</label>)}</div>}<p>Demo setup: choices last for this session. Account creation requires the backend.</p></fieldset>}
 <div className="password-field">{!workspace && <button type="button" className="forgot text-link" onClick={() => setNotice('Password recovery will be available when the service is connected.')}>Forgot password?</button>}<Field label="Password" id="password" icon="lock" type="password" minLength={workspace ? 8 : undefined} placeholder={workspace ? 'Min. 8 characters' : '••••••••'} autoComplete={workspace ? 'new-password' : 'current-password'} /></div>
 {!workspace && <label className="remember"><input type="checkbox" />Remember me for 30 days</label>}
 <button className="primary" type="submit">{workspace ? 'Create Workspace' : 'Login'}<Icon name={workspace ? 'rocket' : 'arrow'} size={26} /></button>
@@ -39,6 +41,6 @@ return <main className={workspace ? 'page workspace-page' : 'page login-page'}>
 {notice && <p className="notice" role="status">{notice}</p>}
 {!workspace && <><div className="divider"><span />OR CONTINUE WITH<span /></div><button className="google" onClick={() => setNotice('Google sign-in will be available when the service is connected.')}><span className="google-g">G</span>Sign in with Google</button><p className="footer">Don’t have a workspace? <a href="#create-workspace">Create one</a></p></>}
 <p className="footer"><a href="#school-dashboard">Preview School Dashboard</a></p>
-<p className="footer"><a href="#gym-dashboard">Preview Gym Dashboard</a></p>
+
 </section></main>
 }

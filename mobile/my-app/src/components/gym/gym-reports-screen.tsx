@@ -536,7 +536,7 @@ export default function GymReportsScreen() {
               style={[s.navItem, active && s.activeNav]}
               onPress={() => {
                 if (item.label === "Dashboard") {
-                  router.replace("/gym-dashboard");
+                  router.replace("/school-dashboard");
                 } else if (!active) {
                   placeholder(item.label);
                 }

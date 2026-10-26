@@ -1,3 +1,4 @@
+import { gymFeatures, saveWorkspace, type GymFeature } from './workspace-store';
 import { useState } from 'react';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
@@ -37,14 +38,15 @@ export default function AuthScreen({ workspace = false }: { workspace?: boolean 
   const [owner, setOwner] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [type, setType] = useState('School');
-  const [selectOpen, setSelectOpen] = useState(false);
+  const [gym, setGym] = useState(false);
+  const [features, setFeatures] = useState<GymFeature[]>([]);
   const [remember, setRemember] = useState(false);
   const [notice, setNotice] = useState('');
   function submit() {
     if (workspace && (!business.trim() || !owner.trim())) { setNotice('Please enter your business name and owner name.'); return; }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) { setNotice('Please enter a valid email address.'); return; }
     if (!password || (workspace && password.length < 8)) { setNotice(workspace ? 'Use at least 8 characters for your password.' : 'Please enter your password.'); return; }
+    if (workspace) { if (!saveWorkspace(business, gym, features)) { setNotice('Select at least one Gym feature.'); return; } router.replace('/school-dashboard'); return; }
     setNotice(workspace ? 'Your workspace details are ready. Workspace creation will be available when the service is connected.' : 'Your details are ready. Sign-in will be available when the service is connected.');
   }
   return <SafeAreaView style={s.safe}><KeyboardAvoidingView style={s.safe} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
@@ -55,11 +57,9 @@ export default function AuthScreen({ workspace = false }: { workspace?: boolean 
         <Text accessibilityRole="header" style={[s.title, workspace && s.workspaceTitle]}>{workspace ? 'Workspace Setup' : 'Welcome Back'}</Text>
         <Text style={[s.subtitle, workspace && s.workspaceSubtitle]}>{workspace ? 'Configure your digital office to start managing your clients effectively.' : 'Please enter your credentials to access your dashboard.'}</Text>
         <View style={[s.form, workspace && s.workspaceForm]}>
-          {workspace && <><Field workspace label="Business Name" icon="store" placeholder="e.g. Acme Studio" value={business} onChange={setBusiness} /><Field workspace label="Owner Name" icon="user" placeholder="Full Name" value={owner} onChange={setOwner} /></>}
+          {workspace && <><Field workspace label="School Name" icon="store" placeholder="e.g. Sunrise School" value={business} onChange={setBusiness} /><Field workspace label="Owner Name" icon="user" placeholder="Full Name" value={owner} onChange={setOwner} /></>}
           <Field workspace={workspace} label="Email" icon="mail" placeholder={workspace ? 'name@business.com' : 'name@school.edu'} value={email} onChange={setEmail} email />
-          {workspace && <View style={s.workspaceField}><Text style={s.workspaceLabel}>Business Type</Text><Pressable accessibilityRole="button" accessibilityLabel={'Business Type: ' + type} accessibilityState={{ expanded: selectOpen }} style={[s.inputWrap, s.workspaceInput, { marginTop: 12 }]} onPress={() => setSelectOpen(!selectOpen)}><Icon name="type" /><Text style={[s.input, { paddingVertical: 14 }]}>{type}</Text><Icon name="chevron" /></Pressable>
-            {selectOpen && <View style={s.options}>{['School', 'Gym', 'Retail', 'Agency', 'Healthcare', 'Other'].map(option => <Pressable accessibilityRole="button" accessibilityState={{ selected: option === type }} key={option} style={s.option} onPress={() => { setType(option); setSelectOpen(false); }}><Text style={{ color: option === type ? blue : '#484b60', fontSize: 18 }}>{option}{option === type ? '  ✓' : ''}</Text></Pressable>)}</View>}
-          </View>}
+          {workspace && <View style={s.workspaceField}><Text style={s.workspaceLabel}>School workspace</Text><Text style={s.previewLabel}>School features are included. Choose optional Gym features.</Text><Pressable accessibilityRole="checkbox" accessibilityState={{ checked: gym }} style={s.option} onPress={() => setGym(!gym)}><Text style={s.link}>{gym ? '☑' : '☐'} Add Gym module</Text></Pressable>{gym && gymFeatures.map(item => <Pressable key={item.id} accessibilityRole="checkbox" accessibilityState={{ checked: features.includes(item.id) }} style={s.option} onPress={() => setFeatures(previous => previous.includes(item.id) ? previous.filter(id => id !== item.id) : [...previous, item.id])}><Text style={s.link}>{features.includes(item.id) ? '☑' : '☐'} {item.label}</Text></Pressable>)}<Text style={s.previewLabel}>Demo setup: choices last for this session. Account creation requires the backend.</Text></View>}
           <Field workspace={workspace} label="Password" icon="lock" placeholder={workspace ? 'Min. 8 characters' : '••••••••'} value={password} onChange={setPassword} password action={!workspace && <Pressable accessibilityRole="button" hitSlop={8} onPress={() => setNotice('Password recovery will be available when the service is connected.')}><Text style={s.link}>Forgot password?</Text></Pressable>} />
           {!workspace && <Pressable accessibilityRole="checkbox" accessibilityState={{ checked: remember }} onPress={() => setRemember(!remember)} style={s.remember}><View style={[s.checkbox, remember && { backgroundColor: blue, borderColor: blue }]}><Text style={{ color: 'white' }}>{remember ? '✓' : ''}</Text></View><Text style={s.rememberText}>Remember me for 30 days</Text></Pressable>}
           <Pressable accessibilityRole="button" style={({ pressed }) => [s.primary, workspace && s.workspacePrimary, pressed && { opacity: 0.8 }]} onPress={submit}><Text style={[s.primaryText, workspace && { fontSize: 20 }]}>{workspace ? 'Create Workspace' : 'Login'}</Text><Icon name={workspace ? 'rocket' : 'arrow'} color="white" size={26} /></Pressable>
@@ -67,9 +67,8 @@ export default function AuthScreen({ workspace = false }: { workspace?: boolean 
         {!!notice && <Text accessibilityRole="alert" accessibilityLiveRegion="polite" style={s.notice}>{notice}</Text>}
         {!workspace && <><View style={s.divider}><View style={s.line} /><Text style={s.dividerText}>OR CONTINUE WITH</Text><View style={s.line} /></View><Pressable accessibilityRole="button" style={s.google} onPress={() => setNotice('Google sign-in will be available when the service is connected.')}><Text style={s.googleG}>G</Text><Text style={s.googleText}>Sign in with Google</Text></Pressable><View style={s.footer}><Text style={s.footerText}>Don’t have a workspace? </Text><Pressable accessibilityRole="link" hitSlop={8} onPress={() => router.push('./create-workspace')}><Text style={[s.footerText, { color: '#0054ed' }]}>Create one</Text></Pressable></View></>}
         <View style={s.previews}>
-          <Text style={s.previewLabel}>Explore demo workspaces</Text>
+          <Text style={s.previewLabel}>School workspace</Text>
           <Pressable accessibilityRole="link" style={s.previewButton} onPress={() => router.push('/school-dashboard')}><Text style={s.link}>Preview School Dashboard</Text><Icon name="arrow" color={blue} size={20} /></Pressable>
-          <Pressable accessibilityRole="link" style={s.previewButton} onPress={() => router.push('/gym-dashboard')}><Text style={s.link}>Preview Gym Dashboard</Text><Icon name="arrow" color={blue} size={20} /></Pressable>
         </View>
       </View>
     </ScrollView>

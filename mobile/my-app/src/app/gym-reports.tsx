@@ -1,3 +1,4 @@
+import GymFeatureGate from '@/components/gym-feature-gate';
 
 import React from "react";
 import { Stack } from "expo-router";
@@ -8,7 +9,7 @@ export default function GymReportsPage() {
   return (
     <>
       <Stack.Screen options={{ headerShown: false }} />
-      <GymReportsScreen />
+      <GymFeatureGate feature="reports"><GymReportsScreen /></GymFeatureGate>
     </>
   );
 }

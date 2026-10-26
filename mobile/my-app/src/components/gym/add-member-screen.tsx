@@ -427,7 +427,7 @@ export default function AddMemberScreen() {
               ]}
               onPress={() => {
                 if (item.label === "Dashboard") {
-                  router.replace("/gym-dashboard");
+                  router.replace("/school-dashboard");
                 } else {
                   Alert.alert(
                     item.label,
