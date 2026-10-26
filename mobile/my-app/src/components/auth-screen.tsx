@@ -58,7 +58,7 @@ export default function AuthScreen({ workspace = false }: { workspace?: boolean 
           {workspace && <><Field workspace label="Business Name" icon="store" placeholder="e.g. Acme Studio" value={business} onChange={setBusiness} /><Field workspace label="Owner Name" icon="user" placeholder="Full Name" value={owner} onChange={setOwner} /></>}
           <Field workspace={workspace} label="Email" icon="mail" placeholder={workspace ? 'name@business.com' : 'name@school.edu'} value={email} onChange={setEmail} email />
           {workspace && <View style={s.workspaceField}><Text style={s.workspaceLabel}>Business Type</Text><Pressable accessibilityRole="button" accessibilityLabel={'Business Type: ' + type} accessibilityState={{ expanded: selectOpen }} style={[s.inputWrap, s.workspaceInput, { marginTop: 12 }]} onPress={() => setSelectOpen(!selectOpen)}><Icon name="type" /><Text style={[s.input, { paddingVertical: 14 }]}>{type}</Text><Icon name="chevron" /></Pressable>
-            {selectOpen && <View style={s.options}>{['School', 'Retail', 'Agency', 'Healthcare', 'Other'].map(option => <Pressable accessibilityRole="button" accessibilityState={{ selected: option === type }} key={option} style={s.option} onPress={() => { setType(option); setSelectOpen(false); }}><Text style={{ color: option === type ? blue : '#484b60', fontSize: 18 }}>{option}{option === type ? '  ✓' : ''}</Text></Pressable>)}</View>}
+            {selectOpen && <View style={s.options}>{['School', 'Gym', 'Retail', 'Agency', 'Healthcare', 'Other'].map(option => <Pressable accessibilityRole="button" accessibilityState={{ selected: option === type }} key={option} style={s.option} onPress={() => { setType(option); setSelectOpen(false); }}><Text style={{ color: option === type ? blue : '#484b60', fontSize: 18 }}>{option}{option === type ? '  ✓' : ''}</Text></Pressable>)}</View>}
           </View>}
           <Field workspace={workspace} label="Password" icon="lock" placeholder={workspace ? 'Min. 8 characters' : '••••••••'} value={password} onChange={setPassword} password action={!workspace && <Pressable accessibilityRole="button" hitSlop={8} onPress={() => setNotice('Password recovery will be available when the service is connected.')}><Text style={s.link}>Forgot password?</Text></Pressable>} />
           {!workspace && <Pressable accessibilityRole="checkbox" accessibilityState={{ checked: remember }} onPress={() => setRemember(!remember)} style={s.remember}><View style={[s.checkbox, remember && { backgroundColor: blue, borderColor: blue }]}><Text style={{ color: 'white' }}>{remember ? '✓' : ''}</Text></View><Text style={s.rememberText}>Remember me for 30 days</Text></Pressable>}
@@ -66,13 +66,20 @@ export default function AuthScreen({ workspace = false }: { workspace?: boolean 
         </View>
         {!!notice && <Text accessibilityRole="alert" accessibilityLiveRegion="polite" style={s.notice}>{notice}</Text>}
         {!workspace && <><View style={s.divider}><View style={s.line} /><Text style={s.dividerText}>OR CONTINUE WITH</Text><View style={s.line} /></View><Pressable accessibilityRole="button" style={s.google} onPress={() => setNotice('Google sign-in will be available when the service is connected.')}><Text style={s.googleG}>G</Text><Text style={s.googleText}>Sign in with Google</Text></Pressable><View style={s.footer}><Text style={s.footerText}>Don’t have a workspace? </Text><Pressable accessibilityRole="link" hitSlop={8} onPress={() => router.push('./create-workspace')}><Text style={[s.footerText, { color: '#0054ed' }]}>Create one</Text></Pressable></View></>}
-        <Pressable accessibilityRole="link" style={{ marginTop: 24, alignItems: 'center' }} onPress={() => router.push('./school-dashboard')}><Text style={s.link}>Preview School Dashboard</Text></Pressable>
+        <View style={s.previews}>
+          <Text style={s.previewLabel}>Explore demo workspaces</Text>
+          <Pressable accessibilityRole="link" style={s.previewButton} onPress={() => router.push('/school-dashboard')}><Text style={s.link}>Preview School Dashboard</Text><Icon name="arrow" color={blue} size={20} /></Pressable>
+          <Pressable accessibilityRole="link" style={s.previewButton} onPress={() => router.push('/gym-dashboard')}><Text style={s.link}>Preview Gym Dashboard</Text><Icon name="arrow" color={blue} size={20} /></Pressable>
+        </View>
       </View>
     </ScrollView>
   </KeyboardAvoidingView></SafeAreaView>;
 }
 const s = StyleSheet.create({
   safe: { flex: 1, backgroundColor: '#f7f8fa' },
+  previews: { marginTop: 24, gap: 10 },
+  previewLabel: { color: '#68758b', fontSize: 12, textAlign: 'center', marginBottom: 2 },
+  previewButton: { minHeight: 48, paddingHorizontal: 14, paddingVertical: 12, borderWidth: 1, borderColor: '#d7dfec', borderRadius: 9, backgroundColor: '#f4f7ff', flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center', gap: 8 },
   page: { padding: 20, paddingTop: 8, alignItems: 'center', flexGrow: 1 },
   workspacePage: { paddingTop: 26 },
   card: { width: '100%', maxWidth: 430, backgroundColor: 'white', borderWidth: 1, borderColor: '#d7dfec', borderRadius: 16, paddingHorizontal: 28, paddingTop: 38, paddingBottom: 36 },
