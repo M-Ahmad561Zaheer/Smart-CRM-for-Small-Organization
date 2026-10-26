@@ -142,9 +142,9 @@ function handleAction(name: string) {
     return;
   }
 
-  // Training Sessions - future screen
+  // Training session booking
   if (name === "Training Sessions") {
-    preview("Training Sessions");
+    router.push("/gym-training");
     return;
   }
 }
