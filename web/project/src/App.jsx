@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react'
 import './App.css'
-import SchoolDashboard from './dashboard/SchoolDashboard'
-import Students from './dashboard/Students'
-import StudentProfile from './dashboard/StudentProfile'
+import SchoolWorkspace from './dashboard/SchoolWorkspace'
 import GymApp from './gym/GymApp'
 const paths = {
 mail: 'M3 5h18v14H3z M3 6l9 7 9-7',
@@ -22,9 +20,7 @@ const [route, setRoute] = useState(location.hash)
 useEffect(() => { const update = () => { setRoute(location.hash); window.scrollTo(0, 0) }; window.addEventListener('hashchange', update); return () => window.removeEventListener('hashchange', update) }, [])
 useEffect(() => { const update = () => { setWorkspace(location.hash === '#create-workspace'); setNotice('') }; window.addEventListener('hashchange', update); return () => window.removeEventListener('hashchange', update) }, [])
 function submit(event) { event.preventDefault(); setNotice(workspace ? 'Your workspace details are ready. Workspace creation will be available when the service is connected.' : 'Your details are ready. Sign-in will be available when the service is connected.') }
-if (route === '#school-dashboard') return <SchoolDashboard />
-if (route === '#students') return <Students />
-if (route.startsWith('#student/')) return <StudentProfile key={route} studentId={route.slice('#student/'.length)} />
+if (route.startsWith('#school-') || route === '#students' || route.startsWith('#student/')) return <SchoolWorkspace route={route} />
 if (route.startsWith('#gym-')) return <GymApp route={route} />
 return <main className={workspace ? 'page workspace-page' : 'page login-page'}>
 {workspace && <a href="#login" className="back-link"><Icon name="back" />Create Workspace</a>}

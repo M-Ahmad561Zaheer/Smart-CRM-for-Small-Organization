@@ -32,6 +32,8 @@ export default function SchoolDashboard() {
   const series = data[period]
   function open(name) {
     if (name === 'Students' || name === 'Tasks') { location.hash = '#students'; return }
+    if (name === 'Fee Mgt') { location.hash = '#school-fees'; return }
+    if (name === 'Reports') { location.hash = '#school-reports'; return }
     if (name === 'Timetable') {
       setPanel(null)
       setExpanded(true)
