@@ -1,3 +1,4 @@
+import { useWorkspace, type GymFeature } from '../workspace-store';
 import React, { useState } from "react";
 import {
   View,
@@ -6,7 +7,6 @@ import {
   StyleSheet,
   Pressable,
   Modal,
-  Alert,
 } from "react-native";
 import { Image } from "expo-image";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -103,25 +103,19 @@ function GymIcon({
 // --------------------------------
 
 export default function GymDashboard() {
+  const workspace = useWorkspace();
+  const actionFeatures: Record<string, GymFeature> = { Members: "members", "Membership Renewal": "renewal", "Training Sessions": "training", Reports: "reports" };
+  const actions = gymActions.filter(item => workspace.features.includes(actionFeatures[item.label]));
   const [period, setPeriod] =
     useState<keyof typeof revenuePeriods>("Last 30 Days");
 
   const [periodMenu, setPeriodMenu] = useState(false);
-  const [activeNav, setActiveNav] = useState("Dashboard");
   const [checkInsExpanded, setCheckInsExpanded] =
     useState(false);
 
   const [menuVisible, setMenuVisible] = useState(false);
 
   const chart = revenuePeriods[period];
-
-  function preview(name: string) {
-    Alert.alert(
-      name,
-      "This module will be developed in the next phase."
-    );
-  }
-
 
 function handleAction(name: string) {
   // Gym Members Directory
@@ -150,13 +144,6 @@ function handleAction(name: string) {
 }
 
 
-  const bottomItems = [
-    { label: "Dashboard", icon: "dashboard" },
-    { label: "Tasks", icon: "tasks" },
-    { label: "Alerts", icon: "alerts" },
-    { label: "Profile", icon: "profile" },
-  ] as const;
-
   const visibleCheckIns = checkInsExpanded
     ? recentCheckIns
     : recentCheckIns.slice(0, 3);
@@ -179,7 +166,7 @@ function handleAction(name: string) {
 
         <Pressable
           style={s.headerAvatar}
-          onPress={() => preview("Gym Profile")}
+          accessibilityRole="link" accessibilityLabel="Back to School workspace" onPress={() => router.replace("/school-dashboard")}
         >
           <Text style={s.headerAvatarText}>GC</Text>
         </Pressable>
@@ -193,13 +180,11 @@ function handleAction(name: string) {
         {/* Welcome Banner */}
         <View style={s.welcomeBanner}>
           <Text style={s.welcomeTitle}>
-            Good morning, Coach.
+            Gym Overview
           </Text>
 
           <Text style={s.welcomeDescription}>
-            Your facility is buzzing. You have 18
-            sessions scheduled today across all
-            trainers.
+            School workspace · Sample gym activity. Backend connection pending.
           </Text>
         </View>
 
@@ -242,7 +227,7 @@ function handleAction(name: string) {
           </Text>
 
           <View style={s.quickGrid}>
-            {gymActions.map((item) => (
+            {actions.map((item) => (
               <Pressable
                 key={item.label}
                 style={s.quickAction}
@@ -495,7 +480,7 @@ function handleAction(name: string) {
       </ScrollView>
 
       {/* Floating Add Button */}
-      <Pressable
+      {workspace.features.includes("members") && <Pressable
   style={s.floatingAdd}
   onPress={() => router.push("/gym-add-member")}
   accessibilityRole="button"
@@ -506,47 +491,12 @@ function handleAction(name: string) {
           size={27}
           color="#FFFFFF"
         />
-      </Pressable>
+      </Pressable>}
 
-      {/* Dashboard Bottom Navigation */}
       <View style={s.bottomNav}>
-        {bottomItems.map((item) => {
-          const selected = activeNav === item.label;
-
-          return (
-            <Pressable
-              key={item.label}
-              style={[
-                s.bottomItem,
-                selected && s.bottomActive,
-              ]}
-              onPress={() => {
-                if (item.label === "Dashboard") {
-                  setActiveNav("Dashboard");
-                } else {
-                  preview(item.label);
-                }
-              }}
-            >
-              <GymIcon
-                name={item.icon}
-                size={19}
-                color={selected ? "#FFFFFF" : "#545D72"}
-              />
-
-              <Text
-                style={[
-                  s.bottomLabel,
-                  selected && {
-                    color: "#FFFFFF",
-                  },
-                ]}
-              >
-                {item.label}
-              </Text>
-            </Pressable>
-          );
-        })}
+        <Pressable accessibilityRole="link" style={s.bottomItem} onPress={() => router.replace('/school-dashboard')}><GymIcon name="dashboard"/><Text style={s.bottomLabel}>School</Text></Pressable>
+        <View accessibilityRole="text" style={[s.bottomItem,s.bottomActive]}><GymIcon name="training" color="white"/><Text style={[s.bottomLabel,{color:'white'}]}>Gym Overview</Text></View>
+        {workspace.features.includes('members') && <Pressable accessibilityRole="link" style={s.bottomItem} onPress={() => router.push('/gym-members')}><GymIcon name="members"/><Text style={s.bottomLabel}>Members</Text></Pressable>}
       </View>
 
       {/* Menu */}
@@ -569,7 +519,7 @@ function handleAction(name: string) {
               </Pressable>
             </View>
 
-            {gymActions.map((item) => (
+            {actions.map((item) => (
               <Pressable
                 key={item.label}
                 style={s.menuItem}

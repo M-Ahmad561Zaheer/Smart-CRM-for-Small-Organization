@@ -26,7 +26,7 @@ useEffect(() => { const update = () => { setWorkspace(location.hash === '#create
 function submit(event) { event.preventDefault(); if (workspace) { if (!saveWorkspace(event.currentTarget.querySelector('#business').value, gym, features, barber, barberSelection)) { setNotice('Select at least one feature for each enabled module.'); return }; location.hash = '#school-dashboard'; return }; setNotice(workspace ? 'Your workspace details are ready. Workspace creation will be available when the service is connected.' : 'Your details are ready. Sign-in will be available when the service is connected.') }
 if (route.startsWith('#school-') || route === '#students' || route.startsWith('#student/')) return <SchoolWorkspace route={route} />
 if (route.startsWith('#barber-')) return <SchoolWorkspace route={route} />
-if (route.startsWith('#gym-')) return <SchoolWorkspace route={route === '#gym-dashboard' ? '#school-dashboard' : route} />
+if (route.startsWith('#gym-')) return <SchoolWorkspace route={route} />
 return <main className={workspace ? 'page workspace-page' : 'page login-page'}>
 {workspace && <a href="#login" className="back-link"><Icon name="back" />Create Workspace</a>}
 <section className={workspace ? 'card workspace-card' : 'card login-card'} aria-labelledby="title">
