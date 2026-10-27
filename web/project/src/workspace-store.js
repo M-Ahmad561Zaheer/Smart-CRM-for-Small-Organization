@@ -1,14 +1,15 @@
 import { useSyncExternalStore } from 'react'
+export const barberFeatures = [['clients', 'Clients'], ['payments', 'Record Service & Payment']]
 export const gymFeatures = [['members', 'Members'], ['renewal', 'Membership Renewal'], ['training', 'Training Sessions'], ['reports', 'Gym Reports']]
-let config = { name: 'School Management', gym: false, features: [] }
+let config = { name: 'School Management', gym: false, features: [], barber: false, barberFeatures: [] }
 const listeners = new Set()
 const subscribe = listener => { listeners.add(listener); return () => listeners.delete(listener) }
 export const getWorkspace = () => config
 export function useWorkspace() { return useSyncExternalStore(subscribe, getWorkspace, getWorkspace) }
-export function saveWorkspace(name, gym, features) {
+export function saveWorkspace(name, gym, features, barber = false, selectedBarber = []) {
   const selected = gym ? gymFeatures.map(([id]) => id).filter(id => features.includes(id)) : []
-  if (gym && !selected.length) return false
-  config = { name: name.trim() || 'School Management', gym, features: selected }
+  if ((barber && !selectedBarber.length) || (gym && !selected.length)) return false
+  config = { name: name.trim() || 'School Management', gym, features: selected, barber, barberFeatures: barber ? selectedBarber : [] }
   listeners.forEach(listener => listener())
   return true
 }
