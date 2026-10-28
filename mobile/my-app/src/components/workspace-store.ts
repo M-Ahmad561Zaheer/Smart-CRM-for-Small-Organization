@@ -1,5 +1,5 @@
 import { useSyncExternalStore } from 'react';
-export const barberFeatures = [{ id: 'clients', label: 'Clients' }, { id: 'payments', label: 'Record Service & Payment' }] as const;
+export const barberFeatures = [{ id: 'clients', label: 'Clients' }, { id: 'payments', label: 'Record Service & Payment' }, { id: 'appointments', label: 'Book Appointments' }, { id: 'reports', label: 'Reports' }] as const;
 export type BarberFeature = typeof barberFeatures[number]['id'];
 export const gymFeatures = [{ id: 'members', label: 'Members', route: '/gym-members' }, { id: 'renewal', label: 'Membership Renewal', route: '/gym-renewal' }, { id: 'training', label: 'Training Sessions', route: '/gym-training' }, { id: 'reports', label: 'Gym Reports', route: '/gym-reports' }] as const;
 export type GymFeature = typeof gymFeatures[number]['id'];

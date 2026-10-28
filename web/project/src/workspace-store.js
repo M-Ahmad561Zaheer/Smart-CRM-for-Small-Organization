@@ -1,5 +1,5 @@
 import { useSyncExternalStore } from 'react'
-export const barberFeatures = [['clients', 'Clients'], ['payments', 'Record Service & Payment']]
+export const barberFeatures = [['clients', 'Clients'], ['payments', 'Record Service & Payment'], ['appointments', 'Book Appointments'], ['reports', 'Reports']]
 export const gymFeatures = [['members', 'Members'], ['renewal', 'Membership Renewal'], ['training', 'Training Sessions'], ['reports', 'Gym Reports']]
 let config = { name: 'School Management', gym: false, features: [], barber: false, barberFeatures: [] }
 const listeners = new Set()
