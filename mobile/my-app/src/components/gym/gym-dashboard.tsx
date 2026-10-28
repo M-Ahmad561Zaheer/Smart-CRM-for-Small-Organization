@@ -495,7 +495,7 @@ function handleAction(name: string) {
 
       <View style={s.bottomNav}>
         <Pressable accessibilityRole="link" style={s.bottomItem} onPress={() => router.replace('/school-dashboard')}><GymIcon name="dashboard"/><Text style={s.bottomLabel}>School</Text></Pressable>
-        <View accessibilityRole="text" style={[s.bottomItem,s.bottomActive]}><GymIcon name="training" color="white"/><Text style={[s.bottomLabel,{color:'white'}]}>Gym Overview</Text></View>
+        <View accessibilityRole="text" style={[s.bottomItem,s.bottomActive]}><GymIcon name="dashboard" color="white"/><Text style={[s.bottomLabel,{color:'white'}]}>Gym Overview</Text></View>
         {workspace.features.includes('members') && <Pressable accessibilityRole="link" style={s.bottomItem} onPress={() => router.push('/gym-members')}><GymIcon name="members"/><Text style={s.bottomLabel}>Members</Text></Pressable>}
       </View>
 

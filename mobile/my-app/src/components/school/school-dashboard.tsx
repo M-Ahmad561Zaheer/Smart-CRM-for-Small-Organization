@@ -1,4 +1,5 @@
-import { gymFeatures, useWorkspace } from '../workspace-store';
+import WorkspaceMenu from '../workspace-menu';
+import { useWorkspace } from '../workspace-store';
 import { useRef, useState } from 'react';
 import type { ComponentRef } from 'react';
 import { Image } from 'expo-image';
@@ -70,8 +71,13 @@ function open(name: string) {
     </View>
     <ScrollView ref={scroll} contentContainerStyle={s.content}>
       <Text style={s.caption}>{workspace.name} · School workspace</Text>
-      {workspace.barber && <View style={s.panel}><View style={{flexDirection:"row",alignItems:"center",gap:10}}><Icon name="barber"/><Text style={s.panelTitle}>Barber Module</Text></View><Pressable accessibilityRole="link" style={s.menuItem} onPress={() => router.push({ pathname: '/barber/[screen]', params: { screen: 'dashboard' } })}><Text style={s.link}>Barber Management</Text><Text style={s.link}>→</Text></Pressable></View>}
-      {workspace.gym && <View style={s.panel}><View style={{flexDirection:"row",alignItems:"center",gap:10}}><Icon name="gym"/><Text style={s.panelTitle}>Gym Module</Text></View><Pressable accessibilityRole="link" style={s.menuItem} onPress={() => router.push("/gym-dashboard")}><Text style={s.link}>Overview</Text><Text style={s.link}>→</Text></Pressable>{gymFeatures.filter(item => workspace.features.includes(item.id)).map(item => <Pressable key={item.id} accessibilityRole="link" style={s.menuItem} onPress={() => router.push(item.route)}><Text style={s.link}>{item.label}</Text><Text style={s.link}>→</Text></Pressable>)}</View>}
+      {(workspace.gym || workspace.barber) && <View style={s.moduleSwitcher}>
+        <Text style={s.moduleCaption}>WORKSPACE MODULES</Text>
+        <View style={s.moduleRow}>
+          {workspace.gym && <Pressable accessibilityRole="button" accessibilityLabel="Open Gym module navigation" style={s.moduleButton} onPress={()=>setPanel('Gym Module')}><Icon name="gym"/><View style={s.moduleInfo}><Text style={s.moduleName}>Gym</Text><Text style={s.caption}>{workspace.features.length} services</Text></View><Text style={s.link}>⌄</Text></Pressable>}
+          {workspace.barber && <Pressable accessibilityRole="button" accessibilityLabel="Open Barber module navigation" style={s.moduleButton} onPress={()=>setPanel('Barber Module')}><Icon name="barber"/><View style={s.moduleInfo}><Text style={s.moduleName}>Barber</Text><Text style={s.caption}>{workspace.barberFeatures.length} services</Text></View><Text style={s.link}>⌄</Text></Pressable>}
+        </View>
+      </View>}
       <View style={s.stats}>{data.stats.map((stat, index) => <View style={s.stat} key={stat.label}><Text style={s.statLabel}>{stat.label}</Text><View style={s.statValueRow}><Text style={[s.statValue, index === 2 && { color: '#d70719' }]}>{stat.value}</Text><Icon name={stat.icon} color={index === 2 ? '#d70719' : '#087c8d'} /></View></View>)}</View>
       <View style={s.actions}><Text style={s.actionsTitle}>QUICK ACTIONS</Text><View style={s.actionRow}>{data.actions.map((action, index) => <Pressable accessibilityRole="button" style={s.action} key={action.label} onPress={() => open(action.label)}><View style={[s.actionIcon, index === 0 && s.selectedAction]}><Icon name={action.icon} color={index === 0 ? 'white' : blue} /></View><Text style={s.actionLabel}>{action.label}</Text></Pressable>)}</View></View>
       <View style={s.panel}>
@@ -92,7 +98,8 @@ function open(name: string) {
     </ScrollView>
     <Pressable accessibilityRole="button" accessibilityLabel="Open quick add" style={s.add} onPress={() => open('Quick add')}><Icon name="plus" color="white" size={28} /></Pressable>
     <View style={s.nav}>{['Dashboard', 'Tasks', 'Alerts', 'Profile'].map(item => <Pressable accessibilityRole="button" accessibilityState={{ selected: item === 'Dashboard' }} key={item} style={[s.navButton, item === 'Dashboard' && s.activeNav]} onPress={() => item === 'Dashboard' ? scroll.current?.scrollTo({ y: 0, animated: true }) : open(item)}><Icon name={item.toLowerCase()} color={item === 'Dashboard' ? 'white' : '#51586a'} size={20} /><Text style={[s.navText, item === 'Dashboard' && { color: 'white' }]}>{item}</Text></Pressable>)}</View>
-    <Modal visible={panel !== null} transparent animationType="fade" onRequestClose={() => setPanel(null)}>
+    {(panel === 'Menu' || panel === 'Gym Module' || panel === 'Barber Module') && <WorkspaceMenu key={panel} initialModule={panel === 'Gym Module' ? 'Gym' : panel === 'Barber Module' ? 'Barber' : 'School'} onClose={()=>setPanel(null)}/>}
+    <Modal visible={panel !== null && !['Menu', 'Gym Module', 'Barber Module'].includes(panel)} transparent animationType="fade" onRequestClose={() => setPanel(null)}>
       <View style={s.overlay}><View style={s.dialog} accessibilityViewIsModal>
         <View style={s.panelHeading}><Text accessibilityRole="header" style={s.panelTitle}>{panel}</Text><Pressable accessibilityRole="button" accessibilityLabel="Close dialog" style={s.iconButton} onPress={() => setPanel(null)}><Icon name="close" /></Pressable></View>
         <Text style={s.dialogNote}>School workspace · Sample data</Text>
@@ -106,6 +113,13 @@ function open(name: string) {
   </SafeAreaView>;
 }
 const s = StyleSheet.create({
+  moduleSwitcher: { marginTop: 12, marginBottom: 20, gap: 10 },
+  moduleCaption: { fontSize: 10, letterSpacing: 1.2, color: '#788397', fontWeight: '600' },
+  moduleRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
+  moduleButton: { flex: 1, minWidth: 130, flexDirection: 'row', alignItems: 'center', gap: 9, padding: 13, backgroundColor: 'white', borderWidth: 1, borderColor: '#d8e2f0', borderRadius: 10 },
+  moduleInfo: { flex: 1, gap: 3 },
+  moduleName: { color: '#24344f', fontWeight: '600', fontSize: 15 },
+
   safe: { flex: 1, backgroundColor: '#f6f8fa' },
   header: { height: 62, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 14, gap: 8, borderBottomWidth: 1, borderColor: '#e4e7ee' },
   iconButton: { minWidth: 36, minHeight: 40, alignItems: 'center', justifyContent: 'center' },
