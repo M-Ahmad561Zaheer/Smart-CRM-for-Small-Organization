@@ -1,3 +1,4 @@
+import { schoolTheme } from '@/components/school/theme';
 
 import React from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
@@ -11,7 +12,7 @@ export default function ReportsPage() {
     <View style={styles.container}>
       <View style={styles.header}>
         <Pressable onPress={() => router.back()}>
-          <Ionicons name="arrow-back" size={20} color="#374151" />
+          <Ionicons name="arrow-back" size={20} color={schoolTheme.primary} />
         </Pressable>
 
         <Text style={styles.title}>Reports</Text>
@@ -19,11 +20,11 @@ export default function ReportsPage() {
         <View style={styles.spacer} />
 
         <Pressable>
-          <Ionicons name="search-outline" size={20} color="#374151" />
+          <Ionicons name="search-outline" size={20} color={schoolTheme.primary} />
         </Pressable>
 
-        <Pressable style={styles.avatar}>
-          <Ionicons name="person-outline" size={15} color="#2863ED" />
+        <Pressable accessibilityLabel="Open student profiles" onPress={() => router.push('/profile')} style={styles.avatar}>
+          <Ionicons name="person-outline" size={15} color={schoolTheme.primary} />
         </Pressable>
       </View>
 
@@ -35,22 +36,22 @@ export default function ReportsPage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F7F9FC',
+    backgroundColor: schoolTheme.background,
   },
   header: {
     height: 52,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: schoolTheme.surface,
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 16,
     gap: 14,
     borderBottomWidth: 1,
-    borderBottomColor: '#E5E7EB',
+    borderBottomColor: schoolTheme.border,
   },
   title: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#0755CC',
+    color: schoolTheme.primary,
   },
   spacer: {
     flex: 1,
@@ -60,7 +61,7 @@ const styles = StyleSheet.create({
     width: 28,
     borderRadius: 14,
     borderWidth: 1,
-    borderColor: '#D8DEEB',
+    borderColor: schoolTheme.border,
     justifyContent: 'center',
     alignItems: 'center',
   },

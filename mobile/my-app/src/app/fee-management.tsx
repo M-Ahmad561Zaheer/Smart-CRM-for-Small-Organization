@@ -1,3 +1,4 @@
+import { schoolTheme } from '@/components/school/theme';
 
 import React from "react";
 import {
@@ -25,7 +26,7 @@ export default function FeeManagementPage() {
           <Ionicons
             name="arrow-back"
             size={20}
-            color="#222222"
+            color={schoolTheme.primary}
           />
         </Pressable>
 
@@ -42,18 +43,18 @@ export default function FeeManagementPage() {
           <Ionicons
             name="search-outline"
             size={20}
-            color="#222222"
+            color={schoolTheme.primary}
           />
         </Pressable>
 
         <Pressable
-          onPress={() => {}}
+          accessibilityLabel="Open student profiles" onPress={() => router.push('/profile')}
           style={styles.iconButton}
         >
           <Ionicons
             name="person-circle-outline"
             size={21}
-            color="#222222"
+            color={schoolTheme.primary}
           />
         </Pressable>
       </View>
@@ -66,17 +67,17 @@ export default function FeeManagementPage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FAFAFA",
+    backgroundColor: schoolTheme.background,
   },
   header: {
     height: 56,
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#FFFFFF",
+    backgroundColor: schoolTheme.surface,
     paddingHorizontal: 16,
     gap: 12,
     borderBottomWidth: 1,
-    borderBottomColor: "#E0E0E0",
+    borderBottomColor: schoolTheme.border,
   },
   backButton: {
     padding: 3,
@@ -84,7 +85,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 17,
     fontWeight: "700",
-    color: "#171717",
+    color: schoolTheme.primary,
   },
   spacer: {
     flex: 1,

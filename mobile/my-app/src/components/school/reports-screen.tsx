@@ -1,3 +1,4 @@
+import { schoolTheme } from './theme';
 import React from "react";
 import {
   View,
@@ -14,13 +15,13 @@ import { Ionicons } from "@expo/vector-icons";
 // ------------------------------
 
 const COLORS = {
-  primary: "#0755CC",
+  primary: schoolTheme.primary,
   chartBlue: "#2863ED",
-  background: "#F7F9FC",
-  white: "#FFFFFF",
-  text: "#20242B",
-  muted: "#7B8193",
-  border: "#D8DEEB",
+  background: schoolTheme.background,
+  white: schoolTheme.surface,
+  text: schoolTheme.text,
+  muted: schoolTheme.muted,
+  border: schoolTheme.border,
   lightBlue: "#D6E4FF",
   teal: "#006A7C",
   track: "#E5E7EB",
@@ -66,7 +67,7 @@ const revenue = [
   {
     name: "Tuition",
     amount: 8200,
-    color: "#0755CC",
+    color: schoolTheme.primary,
   },
   {
     name: "Facilities",

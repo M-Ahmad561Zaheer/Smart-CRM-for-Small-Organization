@@ -18,6 +18,7 @@ export default function WorkspaceMenu({ initialModule = 'School', onClose }: { i
     {label:'Alerts',detail:'Invoices, appointments and reminders',icon:'notifications-outline',route:'/alerts'},
     {label:'Overview',detail:'Your school at a glance',icon:'grid-outline',route:'/school-dashboard'},
     {label:'Students / Tasks',detail:'Student records and profiles',icon:'people-outline',route:'/students'},
+    {label:'Profile',detail:'Choose a student to view their profile',icon:'person-outline',route:'/profile'},
     {label:'Fee Management',detail:'Student fees and balances',icon:'wallet-outline',route:'/fee-management'},
     {label:'Reports',detail:'School performance and insights',icon:'bar-chart-outline',route:'/reports'},
     {label:'Timetable',detail:'Teachers and class schedules',icon:'calendar-outline',route:'/teacher-timetable'},

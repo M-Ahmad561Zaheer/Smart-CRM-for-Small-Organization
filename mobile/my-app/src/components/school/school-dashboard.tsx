@@ -59,6 +59,8 @@ function open(name: string) {
     return;
   }
 
+  if (name === 'Profile') { setPanel(null); router.push('/profile'); return; }
+
   // Existing modal functionality
   setPanel(name);
 }
@@ -68,7 +70,7 @@ function open(name: string) {
     <View style={s.header}>
       <Pressable accessibilityRole="button" accessibilityLabel="Open menu" style={s.iconButton} onPress={() => open('Menu')}><Icon name="menu" /></Pressable>
       <Text accessibilityRole="header" style={s.headerTitle}>School Management</Text>
-      <Pressable accessibilityRole="button" accessibilityLabel="Open administrator profile" style={s.avatar} onPress={() => open('Profile')}><Text style={s.avatarText}>SA</Text></Pressable>
+      <Pressable accessibilityRole="button" accessibilityLabel="Open student profiles" style={s.avatar} onPress={() => open('Profile')}><Text style={s.avatarText}>SA</Text></Pressable>
     </View>
     <ScrollView ref={scroll} contentContainerStyle={s.content}>
       <Text style={s.caption}>{workspace.name} · School workspace</Text>

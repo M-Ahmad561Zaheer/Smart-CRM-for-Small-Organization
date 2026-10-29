@@ -1,3 +1,4 @@
+import { schoolTheme } from './theme';
 import { useFeeInvoices } from '../alerts-store';
 import { router } from 'expo-router';
 
@@ -13,13 +14,14 @@ import {
 import Ionicons from "@expo/vector-icons/Ionicons";
 
 const C = {
-  background: "#FAFAFA",
-  white: "#FFFFFF",
-  black: "#111111",
-  text: "#202020",
-  muted: "#737373",
-  border: "#DEDEDE",
-  light: "#F4F4F4",
+  background: schoolTheme.background,
+  white: schoolTheme.surface,
+  black: schoolTheme.text,
+  primary: schoolTheme.primary,
+  text: schoolTheme.text,
+  muted: schoolTheme.muted,
+  border: schoolTheme.border,
+  light: schoolTheme.primarySoft,
 };
 
 type Invoice = {
@@ -274,7 +276,7 @@ export default function FeeManagementScreen() {
 
             <View style={styles.headingButtons}>
               <Pressable
-                style={styles.smallButton}
+                style={[styles.smallButton, filter !== "All" && {borderColor:C.primary}]}
                 onPress={nextFilter}
               >
                 <Text style={styles.smallButtonText}>
@@ -404,7 +406,7 @@ export default function FeeManagementScreen() {
                 name={item.icon}
                 size={21}
                 color={
-                  selected ? C.black : "#888888"
+                  selected ? C.primary : C.muted
                 }
               />
 
@@ -443,7 +445,7 @@ const styles = StyleSheet.create({
   pageTitle: {
     fontSize: 22,
     fontWeight: "700",
-    color: C.black,
+    color: C.primary,
   },
   subtitle: {
     fontSize: 11,
@@ -453,8 +455,8 @@ const styles = StyleSheet.create({
   },
   createButton: {
     height: 46,
-    borderRadius: 3,
-    backgroundColor: "#000000",
+    borderRadius: 8,
+    backgroundColor: C.primary,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
@@ -474,7 +476,7 @@ const styles = StyleSheet.create({
     backgroundColor: C.white,
     borderWidth: 1,
     borderColor: C.border,
-    borderRadius: 4,
+    borderRadius: 10,
     minHeight: 124,
     paddingHorizontal: 20,
     paddingVertical: 20,
@@ -488,13 +490,13 @@ const styles = StyleSheet.create({
   metricLabel: {
     fontSize: 10,
     fontWeight: "600",
-    color: "#777777",
+    color: C.muted,
     letterSpacing: 0.6,
   },
   metricAmount: {
     fontSize: 28,
     fontWeight: "800",
-    color: C.black,
+    color: C.primary,
     marginTop: 7,
   },
   metricDescription: {
@@ -506,7 +508,7 @@ const styles = StyleSheet.create({
     backgroundColor: C.white,
     borderWidth: 1,
     borderColor: C.border,
-    borderRadius: 4,
+    borderRadius: 10,
     overflow: "hidden",
   },
   invoiceHeading: {
@@ -528,19 +530,19 @@ const styles = StyleSheet.create({
   smallButton: {
     borderWidth: 1,
     borderColor: C.border,
-    backgroundColor: "#FAFAFA",
+    backgroundColor: schoolTheme.primarySoft,
     paddingHorizontal: 11,
     paddingVertical: 8,
-    borderRadius: 3,
+    borderRadius: 8,
   },
   smallButtonText: {
     fontSize: 10,
-    color: C.black,
+    color: C.primary,
   },
   tableHeader: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#F3F3F3",
+    backgroundColor: schoolTheme.primarySoft,
     borderTopWidth: 1,
     borderBottomWidth: 1,
     borderColor: C.border,
@@ -550,7 +552,7 @@ const styles = StyleSheet.create({
   columnHeader: {
     fontSize: 10,
     fontWeight: "700",
-    color: "#929292",
+    color: C.muted,
   },
   idColumn: {
     width: "31%",
@@ -576,13 +578,13 @@ const styles = StyleSheet.create({
   invoiceId: {
     fontSize: 11,
     fontWeight: "700",
-    color: C.text,
+    color: C.primary,
   },
   clientImage: {
     height: 26,
     width: 22,
     borderWidth: 1,
-    borderColor: "#EEEEEE",
+    borderColor: C.border,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -626,14 +628,14 @@ const styles = StyleSheet.create({
     paddingVertical: 9,
     borderWidth: 1,
     borderColor: C.border,
-    borderRadius: 3,
+    borderRadius: 8,
   },
   disabledButton: {
     opacity: 0.45,
   },
   pageButtonText: {
     fontSize: 10,
-    color: C.black,
+    color: C.primary,
   },
   bottomNav: {
     height: 66,
@@ -652,10 +654,10 @@ const styles = StyleSheet.create({
   },
   bottomLabel: {
     fontSize: 10,
-    color: "#888888",
+    color: C.muted,
   },
   bottomActive: {
-    color: C.black,
+    color: C.primary,
     fontWeight: "700",
   },
 });
