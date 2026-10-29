@@ -1,6 +1,8 @@
+import { queueAlert } from './alerts-store';
 import { useSyncExternalStore } from 'react';
 import { getBarber, services } from './barber-store';
-export type Booking = { id: string; clientId: string; serviceId: string; date: string; time: string; status: 'Confirmed' | 'Pending' | 'In Progress' | 'Cancelled' };
+export const barbers = ['Marcus Thorne', 'Liam Vance'];
+export type Booking = { id: string; clientId: string; serviceId: string; date: string; time: string; barber?: string; status: 'Confirmed' | 'Pending' | 'In Progress' | 'Cancelled' };
 export function dateKey(date = new Date()) { return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`; }
 export const timeSlots = ['09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00'];
 export function timeLabel(time: string) { const hour=Number(time.split(':')[0]);return `${String(hour%12 || 12).padStart(2,'0')}:${time.split(':')[1]} ${hour>=12?'PM':'AM'}`; }
@@ -22,10 +24,15 @@ export function slotAvailable(date:string,time:string,serviceId:string,now=new D
   if(!duration || !timeSlots.includes(time) || Number.isNaN(start.getTime()) || dateKey(start)!==date || start<=now)return false;
   return !bookings.some(b=>b.date===date && b.status!=='Cancelled' && minutes(time)<minutes(b.time)+(services.find(s=>s.id===b.serviceId)?.minutes || 60) && minutes(time)+duration>minutes(b.time));
 }
-export function bookAppointment(clientId:string,serviceId:string,date:string,time:string) {
+export function bookAppointment(clientId:string,serviceId:string,date:string,time:string,barber=barbers[0]) {
   if(!getBarber().clients.some(c=>c.id===clientId))return 'Select a client from the list.';
   if(!slotAvailable(date,time,serviceId))return 'This time is unavailable. Select a future available slot.';
-  bookings=[...bookings,{id:`booking-${Date.now()}`,clientId,serviceId,date,time,status:'Confirmed'}];listeners.forEach(l=>l());return '';
+  if(!barbers.includes(barber))return 'Select a barber.';
+  const id=`booking-${Date.now()}`;
+  bookings=[...bookings,{id,clientId,serviceId,date,time,barber,status:'Confirmed'}];
+  const client=getBarber().clients.find(c=>c.id===clientId)!;
+  queueAlert({module:'barber',eventId:id,type:'Appointment Reminder',recipient:client.name,contact:client.phone,channel:'SMS',message:`${services.find(s=>s.id===serviceId)?.name} appointment for ${client.name} on ${date} at ${timeLabel(time)} with barber ${barber}.`});
+  listeners.forEach(l=>l());return '';
 }
 export function cancelBooking(id:string) { bookings=bookings.map(b=>b.id===id?{...b,status:'Cancelled'}:b);listeners.forEach(l=>l()); }
 export const report = { revenue:85000,appointments:12,trend:[270,360,300,510,420,330,540],days:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],popularity:[{name:'Fade & Beard Trim',count:42},{name:'Classic Haircut',count:28},{name:'Hot Towel Shave',count:15}],staff:[{name:'Marcus Thorne',bookings:32,cents:245000},{name:'Liam Vance',bookings:24,cents:189000}] };

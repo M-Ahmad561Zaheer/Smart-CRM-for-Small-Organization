@@ -15,6 +15,7 @@ export default function WorkspaceMenu({ initialModule = 'School', onClose }: { i
   const gymIcons = { members:'people-outline', renewal:'refresh-outline', training:'barbell-outline', reports:'bar-chart-outline' } as const;
   const barberIcons = { clients:'people-outline', payments:'card-outline', appointments:'calendar-outline', reports:'bar-chart-outline' } as const;
   const items: Item[] = selected === 'School' ? [
+    {label:'Alerts',detail:'Invoices, appointments and reminders',icon:'notifications-outline',route:'/alerts'},
     {label:'Overview',detail:'Your school at a glance',icon:'grid-outline',route:'/school-dashboard'},
     {label:'Students / Tasks',detail:'Student records and profiles',icon:'people-outline',route:'/students'},
     {label:'Fee Management',detail:'Student fees and balances',icon:'wallet-outline',route:'/fee-management'},
@@ -27,6 +28,7 @@ export default function WorkspaceMenu({ initialModule = 'School', onClose }: { i
     {label:'Overview',detail:'Your barber services at a glance',icon:'grid-outline',route:{pathname:'/barber/[screen]',params:{screen:'dashboard'}}},
     ...barberFeatures.filter(item=>workspace.barberFeatures.includes(item.id)).map(item=>({label:item.label,detail:({clients:'Client profiles and preferences',payments:'Services, payments and loyalty',appointments:'Calendar and available slots',reports:'Revenue and service insights'})[item.id],icon:barberIcons[item.id],route:{pathname:'/barber/[screen]' as const,params:{screen:item.id}}})),
   ];
+  if (selected !== 'School') items.push({label:'Alerts',detail:selected==='Gym'?'Training and membership reminders':'Barber appointment reminders',icon:'notifications-outline',route:{pathname:'/alerts',params:{module:selected.toLowerCase()}}});
   function navigate(route: Href) { onClose(); router.push(route); }
   return <Modal transparent animationType="fade" onRequestClose={onClose} visible><View style={s.overlay}>
     <Pressable style={StyleSheet.absoluteFill} accessibilityRole="button" accessibilityLabel="Close navigation" onPress={onClose}/>

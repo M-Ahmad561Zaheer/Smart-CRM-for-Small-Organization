@@ -1,5 +1,7 @@
+import { queueAlert } from '../alerts-store';
 import { useSyncExternalStore } from 'react';
 import { getBarber, services } from './barber-store';
+export const barbers = ['Marcus Thorne', 'Liam Vance'];
 export function dateKey(date = new Date()) { return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`; }
 export const timeSlots = ['09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00'];
 export function timeLabel(time) { const hour = Number(time.split(':')[0]); return `${String(hour % 12 || 12).padStart(2, '0')}:${time.split(':')[1]} ${hour >= 12 ? 'PM' : 'AM'}`; }
@@ -22,12 +24,17 @@ export function slotAvailable(date, time, serviceId, now = new Date()) {
         return false;
     return !bookings.some(b => b.date === date && b.status !== 'Cancelled' && minutes(time) < minutes(b.time) + (services.find(s => s.id === b.serviceId)?.minutes || 60) && minutes(time) + duration > minutes(b.time));
 }
-export function bookAppointment(clientId, serviceId, date, time) {
+export function bookAppointment(clientId, serviceId, date, time, barber = barbers[0]) {
     if (!getBarber().clients.some(c => c.id === clientId))
         return 'Select a client from the list.';
     if (!slotAvailable(date, time, serviceId))
         return 'This time is unavailable. Select a future available slot.';
-    bookings = [...bookings, { id: `booking-${Date.now()}`, clientId, serviceId, date, time, status: 'Confirmed' }];
+    if (!barbers.includes(barber))
+        return 'Select a barber.';
+    const id = `booking-${Date.now()}`;
+    bookings = [...bookings, { id, clientId, serviceId, date, time, barber, status: 'Confirmed' }];
+    const client = getBarber().clients.find(c => c.id === clientId);
+    queueAlert({ module: 'barber', eventId: id, type: 'Appointment Reminder', recipient: client.name, contact: client.phone, channel: 'SMS', message: `${services.find(s => s.id === serviceId)?.name} appointment for ${client.name} on ${date} at ${timeLabel(time)} with barber ${barber}.` });
     listeners.forEach(l => l());
     return '';
 }

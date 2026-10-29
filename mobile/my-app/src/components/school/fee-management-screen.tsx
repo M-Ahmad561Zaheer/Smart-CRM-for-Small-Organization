@@ -1,3 +1,5 @@
+import { useFeeInvoices } from '../alerts-store';
+import { router } from 'expo-router';
 
 import React, { useMemo, useState } from "react";
 import {
@@ -150,6 +152,7 @@ function InvoiceRow({ item }: { item: Invoice }) {
 }
 
 export default function FeeManagementScreen() {
+  const generated = useFeeInvoices();
   const [page, setPage] = useState(1);
   const [filter, setFilter] = useState<
     "All" | "Paid" | "Pending" | "Overdue"
@@ -158,13 +161,13 @@ export default function FeeManagementScreen() {
     useState("Contacts");
 
   const filteredInvoices = useMemo(() => {
-    return invoices.filter((item) => {
+    return [...generated.map(item=>({id:item.id,client:item.student,date:item.due,status:"Pending" as const})),...invoices].filter((item) => {
       const matchesStatus =
         filter === "All" || item.status === filter;
 
       return matchesStatus;
     });
-  }, [filter]);
+  }, [filter, generated]);
 
   const totalPages = Math.max(
     1,
@@ -225,7 +228,7 @@ export default function FeeManagementScreen() {
           <Pressable
             style={styles.createButton}
             onPress={() =>
-              showPlaceholder("Create New Invoice")
+              router.push("/create-fee-invoice")
             }
           >
             <Ionicons

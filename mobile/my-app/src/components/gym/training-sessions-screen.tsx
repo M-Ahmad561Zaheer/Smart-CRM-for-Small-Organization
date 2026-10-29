@@ -1,3 +1,5 @@
+import { getMemberProfile } from './member-profile-data';
+import { queueAlert } from '../alerts-store';
 import { useState } from 'react';
 import { Alert, KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { Image } from 'expo-image';
@@ -14,7 +16,7 @@ export default function TrainingSessionsScreen() {
   const [query, setQuery] = useState('');
   const member = gymMembers.find(item => item.id === memberId);
   const matchingMembers = gymMembers.filter(item => `${item.name} ${item.membershipId}`.toLowerCase().includes(query.trim().toLowerCase()));
-  const [date, setDate] = useState('06/07/2026');
+  const [date, setDate] = useState('');
   const [time, setTime] = useState('10:00 AM');
   const [trainer, setTrainer] = useState('marcus');
   const [type, setType] = useState(types[0]);
@@ -26,8 +28,11 @@ export default function TrainingSessionsScreen() {
     const [month, day, year] = date.split('/').map(Number);
     const parsed = new Date(year, month - 1, day);
     if (!/^\d{2}\/\d{2}\/\d{4}$/.test(date) || year < 1900 || parsed.getFullYear() !== year || parsed.getMonth() !== month - 1 || parsed.getDate() !== day) { setError('Enter a valid date using MM/DD/YYYY.'); setNotice(''); return; }
+    const [clock,period]=time.split(' '); const [hours,minutes]=clock.split(':').map(Number);parsed.setHours(hours%12+(period==='PM'?12:0),minutes);
+    if(parsed<=new Date()){setError('Choose a future session date and time.');return;}
+    queueAlert({module:'gym',eventId:`training:${member.id}:${date}:${time}:${trainer}`,type:'Appointment Reminder',recipient:member.name,contact:getMemberProfile(member.id,member.name,member.plan).phone,channel:'SMS',message:`${type} for ${member.name} on ${date} at ${time}, assigned trainer: ${trainers.find(item=>item.id===trainer)?.name}.`});
     setError('');
-    setNotice(`${member.name} (${member.membershipId}): ${type} with ${trainers.find(item => item.id === trainer)?.name} on ${date} at ${time}. Preview ready — booking and reminders will be available when the service is connected.`);
+    setNotice(`${member.name} (${member.membershipId}): ${type} with ${trainers.find(item => item.id === trainer)?.name} on ${date} at ${time}. Demo notification queued in Alerts. Actual booking and reminders require the backend.`);
   }
   return <SafeAreaView style={s.safe}><KeyboardAvoidingView style={s.safe} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
     <View style={s.header}><Pressable accessibilityRole="button" accessibilityLabel="Back to Gym dashboard" style={s.back} onPress={() => router.replace('/school-dashboard')}><Ionicons name="arrow-back" color="#0754d5" size={22}/></Pressable><Text style={s.headerTitle}>School · Gym Module</Text></View>
@@ -38,7 +43,7 @@ export default function TrainingSessionsScreen() {
       <View style={s.reminder}><View style={s.bell}><Ionicons name="notifications-outline" size={19} color="#7890b2"/></View><View style={{ flex: 1 }}><Text style={s.reminderTitle}>Automated Reminders</Text><Text style={s.reminderText}>SMS and push reminders for the member and trainer 1 hour before the session. Activation pending backend connection.</Text></View></View>
       {!!error && <Text accessibilityRole="alert" style={s.error}>{error}</Text>}<Pressable accessibilityRole="button" style={({ pressed }) => [s.book, pressed && { opacity: 0.8 }]} onPress={book}><Ionicons name="calendar-outline" size={21} color="white"/><Text style={s.bookText}>Book Session</Text></Pressable>{!!notice && <Text accessibilityLiveRegion="polite" style={s.notice}>{notice}</Text>}<Text style={s.demo}>Demo booking · No session or reminder is sent</Text>
     </ScrollView>
-    <View style={s.nav}>{(['Dashboard', 'Tasks', 'Alerts', 'Profile'] as const).map((label, index) => <Pressable key={label} accessibilityRole="button" accessibilityState={{ selected: label === 'Tasks' }} style={[s.navButton, label === 'Tasks' && s.activeNav]} onPress={() => label === 'Dashboard' ? router.replace('/school-dashboard') : label === 'Tasks' ? setNotice('Training session booking is open.') : Alert.alert(label, label === 'Alerts' ? 'Reminders will appear here when the service is connected.' : 'Administrator details will be available after sign-in.')}><Ionicons name={(['grid-outline', 'clipboard-outline', 'notifications-outline', 'person-outline'] as const)[index]} size={21} color={label === 'Tasks' ? '#2865ee' : '#667085'}/><Text style={s.navText}>{label}</Text></Pressable>)}</View>
+    <View style={s.nav}>{(['Dashboard', 'Tasks', 'Alerts', 'Profile'] as const).map((label, index) => <Pressable key={label} accessibilityRole="button" accessibilityState={{ selected: label === 'Tasks' }} style={[s.navButton, label === 'Tasks' && s.activeNav]} onPress={() => label === 'Dashboard' ? router.replace('/school-dashboard') : label === 'Tasks' ? setNotice('Training session booking is open.') : label === 'Alerts' ? router.push({pathname:'/alerts',params:{module:'gym'}}) : Alert.alert(label, 'Administrator details will be available after sign-in.')}><Ionicons name={(['grid-outline', 'clipboard-outline', 'notifications-outline', 'person-outline'] as const)[index]} size={21} color={label === 'Tasks' ? '#2865ee' : '#667085'}/><Text style={s.navText}>{label}</Text></Pressable>)}</View>
     <Modal visible={picker !== null} transparent animationType="fade" onRequestClose={() => setPicker(null)}><View style={s.overlay}><View style={s.dialog} accessibilityViewIsModal><View style={s.dialogHeader}><Text style={s.headerTitle}>{picker === 'time' ? 'Select Session Time' : 'Select Session Type'}</Text><Pressable accessibilityRole="button" accessibilityLabel="Close options" style={s.back} onPress={() => setPicker(null)}><Ionicons name="close" size={24}/></Pressable></View><ScrollView>{(picker === 'time' ? times : types).map(value => <Pressable accessibilityRole="radio" accessibilityState={{ checked: value === (picker === 'time' ? time : type) }} style={s.option} key={value} onPress={() => { if (picker === 'time') setTime(value); else setType(value); setPicker(null); setNotice(''); }}><Text style={s.inputText}>{value}</Text>{value === (picker === 'time' ? time : type) && <Ionicons name="checkmark" color="#0754d5" size={20}/>}</Pressable>)}</ScrollView></View></View></Modal>
   </KeyboardAvoidingView></SafeAreaView>;
 }

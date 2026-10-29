@@ -30,6 +30,7 @@ export default function SchoolDashboard() {
   const series = data[period];
   
 function open(name: string) {
+  if (name === 'Alerts') { setPanel(null); router.push('/alerts'); return; }
   // Students / Tasks
   if (name === 'Students' || name === 'Tasks') {
     setPanel(null);
