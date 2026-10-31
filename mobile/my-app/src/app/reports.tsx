@@ -1,7 +1,8 @@
+import { Text } from '@/components/responsive-text';
 import { schoolTheme } from '@/components/school/theme';
 
 import React from 'react';
-import { View, Text, Pressable, StyleSheet } from 'react-native';
+import { View, Pressable, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 
@@ -39,7 +40,7 @@ const styles = StyleSheet.create({
     backgroundColor: schoolTheme.background,
   },
   header: {
-    height: 52,
+    minHeight: 52,
     backgroundColor: schoolTheme.surface,
     flexDirection: 'row',
     alignItems: 'center',

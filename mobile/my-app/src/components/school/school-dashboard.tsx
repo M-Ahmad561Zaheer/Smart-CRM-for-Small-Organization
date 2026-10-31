@@ -1,10 +1,11 @@
+import { Text } from '@/components/responsive-text';
 import WorkspaceMenu from '../workspace-menu';
 import { useWorkspace } from '../workspace-store';
 import { useRef, useState } from 'react';
 import type { ComponentRef } from 'react';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
-import { Modal, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { useWindowDimensions, Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import icons from './icons.json';
 import data from './demo-data.json';
@@ -20,6 +21,8 @@ const ringSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180"><
 const sections: Record<string, string[]> = data.sections;
 
 export default function SchoolDashboard() {
+  const { width, fontScale } = useWindowDimensions();
+  const compact = width < 360 || fontScale > 1.3;
   const workspace = useWorkspace();
   const [period, setPeriod] = useState<'monthly' | 'weekly'>('monthly');
   const [selected, setSelected] = useState(5);
@@ -81,7 +84,7 @@ function open(name: string) {
           {workspace.barber && <Pressable accessibilityRole="button" accessibilityLabel="Open Barber module navigation" style={s.moduleButton} onPress={()=>setPanel('Barber Module')}><Icon name="barber"/><View style={s.moduleInfo}><Text style={s.moduleName}>Barber</Text><Text style={s.caption}>{workspace.barberFeatures.length} services</Text></View><Text style={s.link}>⌄</Text></Pressable>}
         </View>
       </View>}
-      <View style={s.stats}>{data.stats.map((stat, index) => <View style={s.stat} key={stat.label}><Text style={s.statLabel}>{stat.label}</Text><View style={s.statValueRow}><Text style={[s.statValue, index === 2 && { color: '#d70719' }]}>{stat.value}</Text><Icon name={stat.icon} color={index === 2 ? '#d70719' : '#087c8d'} /></View></View>)}</View>
+      <View style={s.stats}>{data.stats.map((stat, index) => <View style={[s.stat, compact && { width: '100%' }]} key={stat.label}><Text style={s.statLabel}>{stat.label}</Text><View style={s.statValueRow}><Text style={[s.statValue, index === 2 && { color: '#d70719' }]}>{stat.value}</Text><Icon name={stat.icon} color={index === 2 ? '#d70719' : '#087c8d'} /></View></View>)}</View>
       <View style={s.actions}><Text style={s.actionsTitle}>QUICK ACTIONS</Text><View style={s.actionRow}>{data.actions.map((action, index) => <Pressable accessibilityRole="button" style={s.action} key={action.label} onPress={() => open(action.label)}><View style={[s.actionIcon, index === 0 && s.selectedAction]}><Icon name={action.icon} color={index === 0 ? 'white' : blue} /></View><Text style={s.actionLabel}>{action.label}</Text></Pressable>)}</View></View>
       <View style={s.panel}>
         <View style={s.panelHeading}><View><Text accessibilityRole="header" style={s.panelTitle}>Revenue Trend</Text><Text style={s.caption}>{period === 'monthly' ? 'Last 6 Months' : 'This Week'}</Text></View><Pressable accessibilityRole="button" accessibilityLabel={'Revenue period: ' + period + '. Change period'} style={s.period} onPress={() => setPanel('Revenue period')}><Text style={s.periodText}>{period === 'monthly' ? 'Monthly' : 'Weekly'}⌄</Text></Pressable></View>
@@ -124,7 +127,7 @@ const s = StyleSheet.create({
   moduleName: { color: '#24344f', fontWeight: '600', fontSize: 15 },
 
   safe: { flex: 1, backgroundColor: '#f6f8fa' },
-  header: { height: 62, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 14, gap: 8, borderBottomWidth: 1, borderColor: '#e4e7ee' },
+  header: { minHeight: 62, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 14, gap: 8, borderBottomWidth: 1, borderColor: '#e4e7ee' },
   iconButton: { minWidth: 36, minHeight: 40, alignItems: 'center', justifyContent: 'center' },
   headerTitle: { fontSize: 20, fontWeight: '600', color: blue, flex: 1 },
   avatar: { width: 34, height: 34, borderRadius: 17, borderWidth: 2, borderColor: '#d4e0e7', backgroundColor: '#194b60', alignItems: 'center', justifyContent: 'center' },
@@ -133,17 +136,17 @@ const s = StyleSheet.create({
   stats: { flexDirection: 'row', flexWrap: 'wrap', gap: 12 },
   stat: { width: '46%', flexGrow: 1, backgroundColor: 'white', borderWidth: 1, borderColor: '#cdd2e3', borderRadius: 10, padding: 16, boxShadow: '0 2px 4px #142f5010' },
   statLabel: { fontSize: 11, letterSpacing: 0.6, color: '#343b50', marginBottom: 8 },
-  statValueRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline', gap: 6 },
+  statValueRow: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'baseline', gap: 6 },
   statValue: { fontSize: 32, fontWeight: '600', color: blue },
   actions: { marginTop: 26, marginBottom: 38 },
   actionsTitle: { fontSize: 12, letterSpacing: 1.3, color: '#313749', marginBottom: 18 },
-  actionRow: { flexDirection: 'row', justifyContent: 'space-between' },
-  action: { alignItems: 'center', gap: 10, minWidth: 66 },
+  actionRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 12, justifyContent: 'space-between' },
+  action: { alignItems: 'center', gap: 10, minWidth: 58, flex: 1 },
   actionIcon: { width: 58, height: 58, backgroundColor: '#e0e4e9', borderWidth: 1, borderColor: '#ccd1de', borderRadius: 16, alignItems: 'center', justifyContent: 'center' },
   selectedAction: { backgroundColor: '#2864ed', borderColor: '#2864ed' },
   actionLabel: { fontSize: 12, color: '#1a1d25' },
   panel: { backgroundColor: 'white', borderWidth: 1, borderColor: '#cdd2e3', borderRadius: 11, paddingHorizontal: 16, paddingVertical: 18, boxShadow: '0 2px 4px #142f5010' },
-  panelHeading: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 12 },
+  panelHeading: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 12 },
   panelTitle: { fontSize: 20, fontWeight: '500', color: '#171b22', letterSpacing: -0.5 },
   caption: { fontSize: 11, color: '#353b50', marginTop: 2 },
   period: { borderWidth: 1, borderColor: '#d4d9e6', borderRadius: 7, paddingHorizontal: 8, minHeight: 34, justifyContent: 'center', backgroundColor: '#f7f8fb' },
@@ -174,7 +177,7 @@ const s = StyleSheet.create({
   badge: { fontSize: 10, color: '#64707c', backgroundColor: '#e5e7e9', borderRadius: 12, paddingVertical: 5, paddingHorizontal: 9, overflow: 'hidden' },
   activeBadge: { backgroundColor: '#e6eeff', color: blue },
   sample: { color: '#69758a', fontSize: 11, textAlign: 'center', marginTop: 20 },
-  nav: { flexDirection: 'row', justifyContent: 'space-between', gap: 6, paddingHorizontal: 16, paddingVertical: 7, height: 64, borderTopWidth: 1, borderColor: '#e0e4eb', backgroundColor: '#f9fafc' },
+  nav: { flexDirection: 'row', justifyContent: 'space-between', gap: 6, paddingHorizontal: 16, paddingVertical: 7, minHeight: 64, borderTopWidth: 1, borderColor: '#e0e4eb', backgroundColor: '#f9fafc' },
   navButton: { flex: 1, alignItems: 'center', justifyContent: 'center', borderRadius: 24, gap: 3 },
   activeNav: { backgroundColor: '#2864ed' },
   navText: { color: '#51586a', fontSize: 11 },

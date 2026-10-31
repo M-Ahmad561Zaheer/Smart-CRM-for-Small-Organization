@@ -1,7 +1,8 @@
+import { Text } from '@/components/responsive-text';
 import GymFeatureGate from '@/components/gym-feature-gate';
 
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, StyleSheet } from 'react-native';
 import { Stack, useLocalSearchParams } from "expo-router";
 
 import MemberProfileScreen from "@/components/gym/member-profile-screen";

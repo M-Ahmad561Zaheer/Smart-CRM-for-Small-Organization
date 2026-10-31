@@ -1,6 +1,7 @@
+import { Text, TextInput } from '@/components/responsive-text';
 import { useState } from 'react';
 import { router } from 'expo-router';
-import { KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from './school-icon';
 import { useProfile, updateProfile, type ProfileFields } from './profile-store';

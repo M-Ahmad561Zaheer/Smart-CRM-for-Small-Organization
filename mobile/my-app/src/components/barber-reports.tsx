@@ -1,5 +1,6 @@
+import { Text } from '@/components/responsive-text';
 import { useState } from 'react';
-import { Platform, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Platform, Pressable, StyleSheet, View } from 'react-native';
 import { report, reportCsv, reportHtml } from './barber-bookings-store';
 import { money } from './barber-store';
 export default function BarberReports() {

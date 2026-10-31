@@ -1,13 +1,7 @@
+import { Text } from '@/components/responsive-text';
 
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  ScrollView,
-  Pressable,
-  StyleSheet,
-  Alert,
-} from "react-native";
+import { View, ScrollView, Pressable, StyleSheet, Alert } from 'react-native';
 import { Image } from "expo-image";
 import { router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -569,7 +563,7 @@ const s = StyleSheet.create({
     backgroundColor: C.background,
   },
   header: {
-    height: 57,
+    minHeight: 57,
     flexDirection: "row",
     alignItems: "center",
     gap: 10,
@@ -915,7 +909,7 @@ const s = StyleSheet.create({
     fontWeight: "600",
   },
   bottomNav: {
-    height: 65,
+    minHeight: 65,
     flexDirection: "row",
     alignItems: "center",
     gap: 5,

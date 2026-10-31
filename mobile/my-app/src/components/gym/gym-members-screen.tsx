@@ -1,14 +1,7 @@
+import { Text, TextInput } from '@/components/responsive-text';
 
 import React, { useMemo, useState } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  ScrollView,
-  Pressable,
-  StyleSheet,
-  Alert,
-} from "react-native";
+import { View, ScrollView, Pressable, StyleSheet, Alert } from 'react-native';
 import { Image } from "expo-image";
 import { router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -589,7 +582,7 @@ const s = StyleSheet.create({
     backgroundColor: C.background,
   },
   header: {
-    height: 59,
+    minHeight: 59,
     backgroundColor: C.white,
     borderBottomWidth: 1,
     borderBottomColor: C.border,
@@ -690,7 +683,7 @@ const s = StyleSheet.create({
     marginBottom: 17,
   },
   searchBox: {
-    height: 40,
+    minHeight: 40,
     flexDirection: "row",
     alignItems: "center",
     gap: 9,
@@ -953,7 +946,7 @@ const s = StyleSheet.create({
     shadowOffset: { width: 0, height: 3 },
   },
   bottomNav: {
-    height: 65,
+    minHeight: 65,
     flexDirection: "row",
     alignItems: "center",
     gap: 6,

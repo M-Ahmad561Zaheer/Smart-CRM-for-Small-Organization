@@ -1,17 +1,7 @@
+import { Text, TextInput } from '@/components/responsive-text';
 
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  ScrollView,
-  StyleSheet,
-  Pressable,
-  Modal,
-  Alert,
-  KeyboardAvoidingView,
-  Platform,
-} from "react-native";
+import { View, ScrollView, StyleSheet, Pressable, Modal, Alert, KeyboardAvoidingView, Platform } from 'react-native';
 import { Image } from "expo-image";
 import { router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -495,7 +485,7 @@ const s = StyleSheet.create({
     backgroundColor: C.background,
   },
   header: {
-    height: 62,
+    minHeight: 62,
     flexDirection: "row",
     alignItems: "center",
     gap: 12,
@@ -567,7 +557,7 @@ const s = StyleSheet.create({
     fontWeight: "600",
   },
   input: {
-    height: 47,
+    minHeight: 47,
     backgroundColor: C.white,
     borderWidth: 1,
     borderColor: "#9FA7B6",
@@ -585,7 +575,7 @@ const s = StyleSheet.create({
     marginTop: 4,
   },
   selectInput: {
-    height: 47,
+    minHeight: 47,
     borderWidth: 1,
     borderColor: "#9FA7B6",
     borderRadius: 6,
@@ -667,7 +657,7 @@ const s = StyleSheet.create({
     marginTop: 3,
   },
   bottomNav: {
-    height: 72,
+    minHeight: 72,
     backgroundColor: "#F8FAFF",
     borderTopWidth: 1,
     borderTopColor: C.border,

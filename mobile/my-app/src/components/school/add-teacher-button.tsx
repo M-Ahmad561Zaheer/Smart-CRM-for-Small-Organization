@@ -1,6 +1,7 @@
+import { Text, TextInput } from '@/components/responsive-text';
 import { useState } from 'react';
 import { router } from 'expo-router';
-import { KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { addTeacher } from './teachers-store';
 export default function AddTeacherButton() {
   const [open,setOpen]=useState(false);

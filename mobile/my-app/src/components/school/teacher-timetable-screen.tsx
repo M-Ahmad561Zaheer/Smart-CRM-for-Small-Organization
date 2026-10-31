@@ -1,6 +1,7 @@
+import { Text, TextInput } from '@/components/responsive-text';
 import { useEffect, useState } from 'react';
 import { router } from 'expo-router';
-import { KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import AddTeacherButton from './add-teacher-button';

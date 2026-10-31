@@ -1,13 +1,7 @@
+import { Text } from '@/components/responsive-text';
 import { schoolTheme } from './theme';
 import React from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-  Alert,
-} from "react-native";
+import { View, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import { Ionicons } from "@expo/vector-icons";
 
 // ------------------------------

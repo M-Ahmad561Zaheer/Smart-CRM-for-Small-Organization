@@ -1,5 +1,6 @@
+import { Text, TextInput } from '@/components/responsive-text';
 import { useState } from 'react';
-import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useBarber, updateClient, money, visitLabel, type Client } from './barber-store';

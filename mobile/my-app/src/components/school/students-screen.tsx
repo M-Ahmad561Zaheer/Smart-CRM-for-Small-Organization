@@ -1,6 +1,7 @@
+import { Text, TextInput } from '@/components/responsive-text';
 import { useState } from 'react';
 import { router } from 'expo-router';
-import { FlatList, KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { FlatList, KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AddTeacherButton from './add-teacher-button';
 import Icon from './school-icon';
@@ -104,7 +105,7 @@ const s = StyleSheet.create({
   addCaption: { color: '#5a6374', fontSize: 11, marginTop: 2 },
   sample: { color: '#69758a', fontSize: 11, textAlign: 'center', marginTop: 20 },
   floatingAdd: { position: 'absolute', right: 22, bottom: 110, width: 58, height: 58, borderRadius: 29, backgroundColor: '#0050d5', alignItems: 'center', justifyContent: 'center', boxShadow: '0 5px 14px #064bcb55' },
-  nav: { height: 64, flexDirection: 'row', paddingHorizontal: 16, paddingVertical: 7, gap: 6, backgroundColor: '#f9fafc', borderTopWidth: 1, borderColor: '#e0e4eb' },
+  nav: { minHeight: 64, flexDirection: 'row', paddingHorizontal: 16, paddingVertical: 7, gap: 6, backgroundColor: '#f9fafc', borderTopWidth: 1, borderColor: '#e0e4eb' },
   navButton: { flex: 1, borderRadius: 24, alignItems: 'center', justifyContent: 'center', gap: 3 },
   activeNav: { backgroundColor: '#2864ed' },
   navText: { fontSize: 11, color: '#51586a' },

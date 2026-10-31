@@ -1,5 +1,6 @@
+import { Text } from '@/components/responsive-text';
 import { useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { useBarber, services, visitLabel } from './barber-store';
 import { barbers, useBookings, dateKey, monthDays, timeSlots, timeLabel, slotAvailable, bookAppointment, cancelBooking } from './barber-bookings-store';
 export default function BarberAppointments() {

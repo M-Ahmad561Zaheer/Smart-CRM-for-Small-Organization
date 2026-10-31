@@ -1,16 +1,10 @@
+import { Text } from '@/components/responsive-text';
 import { schoolTheme } from './theme';
 import { useFeeInvoices } from '../alerts-store';
 import { router } from 'expo-router';
 
 import React, { useMemo, useState } from "react";
-import {
-  View,
-  Text,
-  ScrollView,
-  StyleSheet,
-  Pressable,
-  Alert,
-} from "react-native";
+import { View, ScrollView, StyleSheet, Pressable, Alert } from 'react-native';
 import Ionicons from "@expo/vector-icons/Ionicons";
 
 const C = {
@@ -454,7 +448,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   createButton: {
-    height: 46,
+    minHeight: 46,
     borderRadius: 8,
     backgroundColor: C.primary,
     flexDirection: "row",
@@ -638,7 +632,7 @@ const styles = StyleSheet.create({
     color: C.primary,
   },
   bottomNav: {
-    height: 66,
+    minHeight: 66,
     flexDirection: "row",
     backgroundColor: C.white,
     borderTopWidth: 1,

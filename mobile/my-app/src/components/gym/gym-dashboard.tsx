@@ -1,13 +1,7 @@
+import { Text } from '@/components/responsive-text';
 import { useWorkspace, type GymFeature } from '../workspace-store';
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  ScrollView,
-  StyleSheet,
-  Pressable,
-  Modal,
-} from "react-native";
+import { useWindowDimensions, View, ScrollView, StyleSheet, Pressable, Modal } from 'react-native';
 import { Image } from "expo-image";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -103,6 +97,8 @@ function GymIcon({
 // --------------------------------
 
 export default function GymDashboard() {
+  const { width, fontScale } = useWindowDimensions();
+  const compact = width < 360 || fontScale > 1.3;
   const workspace = useWorkspace();
   const actionFeatures: Record<string, GymFeature> = { Members: "members", "Membership Renewal": "renewal", "Training Sessions": "training", Reports: "reports" };
   const actions = gymActions.filter(item => workspace.features.includes(actionFeatures[item.label]));
@@ -193,7 +189,7 @@ function handleAction(name: string) {
           {gymStats.map((item) => (
             <View
               key={item.label}
-              style={s.statCard}
+              style={[s.statCard, compact && { width: '100%' }]}
             >
               <View style={s.statTop}>
                 <Text style={s.statLabel}>
@@ -551,7 +547,7 @@ const s = StyleSheet.create({
     backgroundColor: C.background,
   },
   header: {
-    height: 58,
+    minHeight: 58,
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: 18,
@@ -916,7 +912,7 @@ const s = StyleSheet.create({
     shadowOffset: { width: 0, height: 3 },
   },
   bottomNav: {
-    height: 65,
+    minHeight: 65,
     backgroundColor: "#F9FAFC",
     borderTopWidth: 1,
     borderTopColor: C.border,
@@ -927,7 +923,7 @@ const s = StyleSheet.create({
   },
   bottomItem: {
     flex: 1,
-    height: 51,
+    minHeight: 51,
     alignItems: "center",
     justifyContent: "center",
     gap: 3,

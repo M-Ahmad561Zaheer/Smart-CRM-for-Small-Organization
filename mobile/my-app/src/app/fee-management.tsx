@@ -1,12 +1,8 @@
+import { Text } from '@/components/responsive-text';
 import { schoolTheme } from '@/components/school/theme';
 
 import React from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  Pressable,
-} from "react-native";
+import { View, StyleSheet, Pressable } from 'react-native';
 import { Stack, router } from "expo-router";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -70,7 +66,7 @@ const styles = StyleSheet.create({
     backgroundColor: schoolTheme.background,
   },
   header: {
-    height: 56,
+    minHeight: 56,
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: schoolTheme.surface,

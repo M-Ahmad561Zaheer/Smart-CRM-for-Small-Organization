@@ -1,15 +1,7 @@
+import { Text } from '@/components/responsive-text';
 
 import React, { useMemo, useState } from "react";
-import {
-  View,
-  Text,
-  ScrollView,
-  Pressable,
-  StyleSheet,
-  Alert,
-  Modal,
-  Switch,
-} from "react-native";
+import { View, ScrollView, Pressable, StyleSheet, Alert, Modal, Switch } from 'react-native';
 import { Image } from "expo-image";
 import { router, useLocalSearchParams } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -538,7 +530,7 @@ const s = StyleSheet.create({
     backgroundColor: C.bg,
   },
   header: {
-    height: 58,
+    minHeight: 58,
     backgroundColor: C.white,
     flexDirection: "row",
     alignItems: "center",

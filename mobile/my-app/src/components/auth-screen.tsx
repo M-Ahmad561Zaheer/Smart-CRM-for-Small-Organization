@@ -1,9 +1,10 @@
+import { Text, TextInput } from '@/components/responsive-text';
 import { barberFeatures, type BarberFeature, gymFeatures, saveWorkspace, type GymFeature } from './workspace-store';
 import { useState } from 'react';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 
 const blue = '#064bcb';
 const paths: Record<string, string> = {
@@ -83,24 +84,24 @@ const s = StyleSheet.create({
   previewButton: { minHeight: 48, paddingHorizontal: 14, paddingVertical: 12, borderWidth: 1, borderColor: '#d7dfec', borderRadius: 9, backgroundColor: '#f4f7ff', flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center', gap: 8 },
   page: { padding: 20, paddingTop: 8, alignItems: 'center', flexGrow: 1 },
   workspacePage: { paddingTop: 26 },
-  card: { width: '100%', maxWidth: 430, backgroundColor: 'white', borderWidth: 1, borderColor: '#d7dfec', borderRadius: 16, paddingHorizontal: 28, paddingTop: 38, paddingBottom: 36 },
-  workspaceCard: { maxWidth: 518, paddingHorizontal: 28, paddingTop: 30, paddingBottom: 46, borderColor: '#bec1d8' },
+  card: { width: '100%', maxWidth: 430, backgroundColor: 'white', borderWidth: 1, borderColor: '#d7dfec', borderRadius: 16, paddingHorizontal: 18, paddingTop: 38, paddingBottom: 36 },
+  workspaceCard: { maxWidth: 518, paddingHorizontal: 18, paddingTop: 30, paddingBottom: 46, borderColor: '#bec1d8' },
   brand: { alignItems: 'center', marginBottom: 27 },
   title: { textAlign: 'center', fontSize: 30, fontWeight: '600', color: '#1d2021', letterSpacing: -0.7, marginBottom: 12 },
   workspaceTitle: { textAlign: 'left', fontWeight: '700' },
   subtitle: { textAlign: 'center', fontSize: 18, lineHeight: 25, color: '#484b60' },
-  workspaceSubtitle: { textAlign: 'left', fontSize: 20, lineHeight: 29 },
+  workspaceSubtitle: { textAlign: 'left', fontSize: 17, lineHeight: 25 },
   form: { marginTop: 48 },
   workspaceForm: { marginTop: 40 },
   field: { marginBottom: 28 },
   workspaceField: { marginBottom: 32 },
   labelRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 6, marginBottom: 10, paddingHorizontal: 4 },
   label: { fontSize: 15, fontWeight: '600', letterSpacing: 0.5, color: '#484b60' },
-  workspaceLabel: { fontSize: 20, fontWeight: '400', letterSpacing: 0, color: '#484b60' },
-  inputWrap: { height: 60, flexDirection: 'row', alignItems: 'center', gap: 12, borderWidth: 1, borderColor: '#bec1d8', borderRadius: 10, backgroundColor: '#f2f3f5', paddingHorizontal: 14 },
-  workspaceInput: { height: 58, backgroundColor: '#f7f8fa', borderRadius: 9 },
+  workspaceLabel: { fontSize: 16, fontWeight: '400', letterSpacing: 0, color: '#484b60' },
+  inputWrap: { minHeight: 60, flexDirection: 'row', alignItems: 'center', gap: 12, borderWidth: 1, borderColor: '#bec1d8', borderRadius: 10, backgroundColor: '#f2f3f5', paddingHorizontal: 14 },
+  workspaceInput: { minHeight: 58, backgroundColor: '#f7f8fa', borderRadius: 9 },
   focused: { borderColor: blue },
-  input: { flex: 1, minWidth: 0, fontSize: 18, color: '#202326', height: '100%' },
+  input: { flex: 1, minWidth: 0, fontSize: 18, color: '#202326', minHeight: 52, paddingVertical: 12 },
   link: { color: '#0053e5', fontSize: 14, fontWeight: '600' },
   remember: { flexDirection: 'row', alignItems: 'center', gap: 12, marginBottom: 28 },
   checkbox: { width: 24, height: 24, borderWidth: 1, borderColor: '#bcc2db', borderRadius: 5, alignItems: 'center', justifyContent: 'center' },
@@ -108,7 +109,7 @@ const s = StyleSheet.create({
   primary: { backgroundColor: blue, minHeight: 72, borderRadius: 10, alignItems: 'center', justifyContent: 'center', flexDirection: 'row', gap: 10, boxShadow: '0 3px 5px #00000022' },
   workspacePrimary: { marginTop: 16, minHeight: 68, borderRadius: 14 },
   primaryText: { color: 'white', fontSize: 25 },
-  divider: { flexDirection: 'row', alignItems: 'center', gap: 20, marginTop: 78, marginBottom: 38 },
+  divider: { flexDirection: 'row', alignItems: 'center', gap: 12, marginTop: 40, marginBottom: 38 },
   line: { height: 1, flex: 1, backgroundColor: '#bec3d9' },
   dividerText: { fontSize: 12, letterSpacing: 1.3, color: '#414558' },
   google: { flexDirection: 'row', gap: 10, alignItems: 'center', justifyContent: 'center', minHeight: 51, borderWidth: 1, borderColor: '#bcc2db', borderRadius: 9 },
@@ -116,7 +117,7 @@ const s = StyleSheet.create({
   googleText: { fontSize: 15, fontWeight: '600', color: '#202326' },
   footer: { flexDirection: 'row', justifyContent: 'center', flexWrap: 'wrap', marginTop: 48 },
   footerText: { fontSize: 13, color: '#373d53' },
-  back: { width: '100%', maxWidth: 518, flexDirection: 'row', alignItems: 'center', gap: 24, paddingHorizontal: 8, marginBottom: 62 },
+  back: { width: '100%', maxWidth: 518, flexDirection: 'row', alignItems: 'center', gap: 24, paddingHorizontal: 8, marginBottom: 28 },
   backText: { color: '#0053e5', fontSize: 23, fontWeight: '600' },
   options: { borderWidth: 1, borderColor: '#bec1d8', borderRadius: 8, marginTop: 8 },
   option: { padding: 14 },
