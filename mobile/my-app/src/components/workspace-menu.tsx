@@ -16,13 +16,13 @@ export default function WorkspaceMenu({ initialModule = 'School', onClose }: { i
   const gymIcons = { members:'people-outline', renewal:'refresh-outline', training:'barbell-outline', reports:'bar-chart-outline' } as const;
   const barberIcons = { clients:'people-outline', payments:'card-outline', appointments:'calendar-outline', reports:'bar-chart-outline' } as const;
   const items: Item[] = selected === 'School' ? [
-    {label:'Alerts',detail:'Invoices, appointments and reminders',icon:'notifications-outline',route:'/alerts'},
     {label:'Overview',detail:'Your school at a glance',icon:'grid-outline',route:'/school-dashboard'},
     {label:'Students / Tasks',detail:'Student records and profiles',icon:'people-outline',route:'/students'},
-    {label:'Profile',detail:'Choose a student to view their profile',icon:'person-outline',route:'/profile'},
     {label:'Fee Management',detail:'Student fees and balances',icon:'wallet-outline',route:'/fee-management'},
-    {label:'Reports',detail:'School performance and insights',icon:'bar-chart-outline',route:'/reports'},
     {label:'Timetable',detail:'Teachers and class schedules',icon:'calendar-outline',route:'/teacher-timetable'},
+    {label:'Reports',detail:'School performance and insights',icon:'bar-chart-outline',route:'/reports'},
+    {label:'Alerts',detail:'Invoices, appointments and reminders',icon:'notifications-outline',route:'/alerts'},
+    {label:'Profile',detail:'Choose a student to view their profile',icon:'person-outline',route:'/profile'},
   ] : selected === 'Gym' ? [
     {label:'Overview',detail:'Your gym at a glance',icon:'grid-outline',route:'/gym-dashboard'},
     ...gymFeatures.filter(item=>workspace.features.includes(item.id)).map(item=>({label:item.label,detail:({members:'Members and their profiles',renewal:'Membership plans and renewals',training:'Members, trainers and sessions',reports:'Revenue and membership insights'})[item.id],icon:gymIcons[item.id],route:item.route})),

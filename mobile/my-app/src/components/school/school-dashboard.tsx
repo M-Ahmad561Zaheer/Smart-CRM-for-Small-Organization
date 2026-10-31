@@ -1,3 +1,4 @@
+import { SchoolBottomNav } from '@/components/school/school-navigation';
 import { Text } from '@/components/responsive-text';
 import WorkspaceMenu from '../workspace-menu';
 import { useWorkspace } from '../workspace-store';
@@ -103,7 +104,7 @@ function open(name: string) {
       <Text style={s.sample}>Preview workspace · Sample data</Text>
     </ScrollView>
     <Pressable accessibilityRole="button" accessibilityLabel="Open quick add" style={s.add} onPress={() => open('Quick add')}><Icon name="plus" color="white" size={28} /></Pressable>
-    <View style={s.nav}>{['Dashboard', 'Tasks', 'Alerts', 'Profile'].map(item => <Pressable accessibilityRole="button" accessibilityState={{ selected: item === 'Dashboard' }} key={item} style={[s.navButton, item === 'Dashboard' && s.activeNav]} onPress={() => item === 'Dashboard' ? scroll.current?.scrollTo({ y: 0, animated: true }) : open(item)}><Icon name={item.toLowerCase()} color={item === 'Dashboard' ? 'white' : '#51586a'} size={20} /><Text style={[s.navText, item === 'Dashboard' && { color: 'white' }]}>{item}</Text></Pressable>)}</View>
+    <SchoolBottomNav active="Dashboard"/>
     {(panel === 'Menu' || panel === 'Gym Module' || panel === 'Barber Module') && <WorkspaceMenu key={panel} initialModule={panel === 'Gym Module' ? 'Gym' : panel === 'Barber Module' ? 'Barber' : 'School'} onClose={()=>setPanel(null)}/>}
     <Modal visible={panel !== null && !['Menu', 'Gym Module', 'Barber Module'].includes(panel)} transparent animationType="fade" onRequestClose={() => setPanel(null)}>
       <View style={s.overlay}><View style={s.dialog} accessibilityViewIsModal>

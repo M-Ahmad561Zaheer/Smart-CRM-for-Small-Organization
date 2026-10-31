@@ -1,3 +1,4 @@
+import { SchoolMenuButton, SchoolBottomNav } from '@/components/school/school-navigation';
 import { Text, TextInput } from '@/components/responsive-text';
 import { useState } from 'react';
 import { router } from 'expo-router';
@@ -13,7 +14,7 @@ export default function ProfilePage() {
   const term = query.trim().toLowerCase();
   const matches = students.filter(student => `${student.name} ${student.id}`.toLowerCase().includes(term));
   return <SafeAreaView style={s.screen}>
-    <View style={s.header}>
+    <View style={s.header}><SchoolMenuButton/>
       <Pressable accessibilityRole="button" accessibilityLabel="Back" style={s.icon} onPress={() => router.canGoBack() ? router.back() : router.replace('/school-dashboard')}><Ionicons name="arrow-back" size={22} color={theme.primary}/></Pressable>
       <Text style={s.title}>Student Profiles</Text>
     </View>
@@ -25,7 +26,7 @@ export default function ProfilePage() {
         <View style={s.identity}><Text style={s.name}>{item.name}</Text><Text style={s.description}>{item.id} · Grade {item.grade}</Text></View>
         <Ionicons name="chevron-forward" color={theme.primary} size={20}/>
       </Pressable>}/>
-    <View style={s.nav}>{(['Dashboard','Tasks','Alerts','Profile'] as const).map((label,index) => <Pressable key={label} accessibilityRole="button" accessibilityState={{selected:label==='Profile'}} style={s.navItem} onPress={() => { if(label!=='Profile') router.replace(label==='Dashboard'?'/school-dashboard':label==='Tasks'?'/students':'/alerts'); }}><Ionicons name={(['grid-outline','checkbox-outline','notifications-outline','person-circle'] as const)[index]} size={22} color={label==='Profile'?theme.primary:theme.muted}/><Text style={{color:label==='Profile'?theme.primary:theme.muted,fontSize:11}}>{label}</Text></Pressable>)}</View>
+    <SchoolBottomNav active="Profile"/>
   </SafeAreaView>;
 }
 const s = StyleSheet.create({

@@ -1,3 +1,4 @@
+import { Ionicons } from '@expo/vector-icons';
 import { Text, TextInput } from '@/components/responsive-text';
 import { barberFeatures, type BarberFeature, gymFeatures, saveWorkspace, type GymFeature } from './workspace-store';
 import { useState } from 'react';
@@ -26,11 +27,13 @@ function Icon({ name, color = '#74798b', size = 24 }: { name: string; color?: st
 type FieldProps = { label: string; icon: string; placeholder: string; value: string; onChange: (value: string) => void; password?: boolean; email?: boolean; workspace: boolean; action?: React.ReactNode };
 function Field({ label, icon, placeholder, value, onChange, password, email, workspace, action }: FieldProps) {
   const [focused, setFocused] = useState(false);
+  const [visible, setVisible] = useState(false);
   return <View style={[s.field, workspace && s.workspaceField]}>
     <View style={s.labelRow}><Text style={[s.label, workspace && s.workspaceLabel]}>{label}</Text>{action}</View>
     <View style={[s.inputWrap, workspace && s.workspaceInput, focused && s.focused]}>
       <Icon name={icon} />
-      <TextInput accessibilityLabel={label} style={s.input} placeholder={placeholder} placeholderTextColor={workspace ? '#c1c5dc' : '#a9acb7'} value={value} onChangeText={onChange} secureTextEntry={password} keyboardType={email ? 'email-address' : 'default'} autoCapitalize={email || password ? 'none' : 'words'} autoCorrect={false} autoComplete={password ? (workspace ? 'new-password' : 'current-password') : email ? 'email' : label === 'Owner Name' ? 'name' : 'off'} onFocus={() => setFocused(true)} onBlur={() => setFocused(false)} />
+      <TextInput accessibilityLabel={label} style={s.input} placeholder={placeholder} placeholderTextColor="#8792a7" value={value} onChangeText={onChange} secureTextEntry={password && !visible} keyboardType={email ? 'email-address' : 'default'} autoCapitalize={email || password ? 'none' : 'words'} autoCorrect={false} autoComplete={password ? (workspace ? 'new-password' : 'current-password') : email ? 'email' : label === 'Owner Name' ? 'name' : 'off'} onFocus={() => setFocused(true)} onBlur={() => setFocused(false)} />
+      {password && <Pressable accessibilityRole="button" accessibilityLabel={visible ? "Hide password" : "Show password"} onPress={() => setVisible(!visible)} style={s.passwordToggle}><Ionicons name={visible ? "eye-off-outline" : "eye-outline"} size={21} color="#64748b" /></Pressable>}
     </View>
   </View>;
 }
@@ -53,17 +56,26 @@ export default function AuthScreen({ workspace = false }: { workspace?: boolean 
     setNotice(workspace ? 'Your workspace details are ready. Workspace creation will be available when the service is connected.' : 'Your details are ready. Sign-in will be available when the service is connected.');
   }
   return <SafeAreaView style={s.safe}><KeyboardAvoidingView style={s.safe} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-    <ScrollView contentContainerStyle={[s.page, workspace && s.workspacePage]} keyboardShouldPersistTaps="handled">
+    <ScrollView contentContainerStyle={[s.page, workspace && s.workspacePage]} keyboardShouldPersistTaps="handled" keyboardDismissMode="on-drag" showsVerticalScrollIndicator={false}>
       {workspace && <Pressable accessibilityRole="button" accessibilityLabel="Back to login" style={s.back} onPress={() => router.replace('/')}><Icon name="back" color={blue} /><Text style={s.backText}>Create Workspace</Text></Pressable>}
       <View style={[s.card, workspace && s.workspaceCard]}>
         {!workspace && <View style={s.brand}><Icon name="brand" size={42} /></View>}
         <Text accessibilityRole="header" style={[s.title, workspace && s.workspaceTitle]}>{workspace ? 'Workspace Setup' : 'Welcome Back'}</Text>
-        <Text style={[s.subtitle, workspace && s.workspaceSubtitle]}>{workspace ? 'Configure your digital office to start managing your clients effectively.' : 'Please enter your credentials to access your dashboard.'}</Text>
+        <Text style={[s.subtitle, workspace && s.workspaceSubtitle]}>{workspace ? 'Set up your school and choose the services you need.' : 'Sign in to manage your school, team and services.'}</Text>
         <View style={[s.form, workspace && s.workspaceForm]}>
           {workspace && <><Field workspace label="School Name" icon="store" placeholder="e.g. Sunrise School" value={business} onChange={setBusiness} /><Field workspace label="Owner Name" icon="user" placeholder="Full Name" value={owner} onChange={setOwner} /></>}
           <Field workspace={workspace} label="Email" icon="mail" placeholder={workspace ? 'name@business.com' : 'name@school.edu'} value={email} onChange={setEmail} email />
-          {workspace && <View style={s.workspaceField}><Text style={s.workspaceLabel}>School workspace</Text><Text style={s.previewLabel}>School features are included. Choose optional modules.</Text><Pressable accessibilityRole="checkbox" accessibilityState={{ checked: gym }} style={s.option} onPress={() => setGym(!gym)}><Text style={s.link}>{gym ? '☑' : '☐'} Add Gym module</Text></Pressable>{gym && gymFeatures.map(item => <Pressable key={item.id} accessibilityRole="checkbox" accessibilityState={{ checked: features.includes(item.id) }} style={s.option} onPress={() => setFeatures(previous => previous.includes(item.id) ? previous.filter(id => id !== item.id) : [...previous, item.id])}><Text style={s.link}>{features.includes(item.id) ? '☑' : '☐'} {item.label}</Text></Pressable>)}<Pressable accessibilityRole="checkbox" accessibilityState={{ checked: barber }} style={s.option} onPress={() => setBarber(!barber)}><Text style={s.link}>{barber ? "☑" : "☐"} Add Barber module</Text></Pressable>{barber && barberFeatures.map(item => <Pressable key={item.id} accessibilityRole="checkbox" accessibilityState={{ checked: barberSelection.includes(item.id) }} style={s.option} onPress={() => setBarberSelection(previous => previous.includes(item.id) ? previous.filter(id => id !== item.id) : [...previous,item.id])}><Text style={s.link}>{barberSelection.includes(item.id) ? "☑" : "☐"} {item.label}</Text></Pressable>)}<Text style={s.previewLabel}>Demo setup: choices last for this session. Account creation requires the backend.</Text></View>}
           <Field workspace={workspace} label="Password" icon="lock" placeholder={workspace ? 'Min. 8 characters' : '••••••••'} value={password} onChange={setPassword} password action={!workspace && <Pressable accessibilityRole="button" hitSlop={8} onPress={() => setNotice('Password recovery will be available when the service is connected.')}><Text style={s.link}>Forgot password?</Text></Pressable>} />
+          {workspace && <View style={s.moduleSection}>
+            <Text style={s.label}>Workspace modules</Text>
+            <View style={s.included}><Ionicons name="school-outline" size={24} color={blue}/><View style={{flex:1,gap:4}}><Text style={s.moduleTitle}>School Management</Text><Text style={s.moduleDescription}>Students, fees, reports and timetable</Text></View><Text style={s.includedBadge}>Included</Text></View>
+            <Text style={s.moduleDescription}>Add optional modules and select their features.</Text>
+            {[{id:'gym',title:'Gym',icon:'barbell-outline' as const,enabled:gym,toggle:()=>setGym(!gym),items:gymFeatures,selected:features as readonly string[],select:(id:string)=>setFeatures(previous=>previous.includes(id as GymFeature)?previous.filter(value=>value!==id):[...previous,id as GymFeature])},{id:'barber',title:'Barber',icon:'cut-outline' as const,enabled:barber,toggle:()=>setBarber(!barber),items:barberFeatures,selected:barberSelection as readonly string[],select:(id:string)=>setBarberSelection(previous=>previous.includes(id as BarberFeature)?previous.filter(value=>value!==id):[...previous,id as BarberFeature])}].map(module=><View key={module.id} style={[s.moduleCard,module.enabled && s.moduleSelected]}>
+              <Pressable accessibilityRole="checkbox" accessibilityLabel={'Add '+module.title+' module'} accessibilityState={{checked:module.enabled}} onPress={module.toggle} style={s.moduleHeading}><Ionicons name={module.icon} size={24} color={blue}/><View style={{flex:1,gap:3}}><Text style={s.moduleTitle}>{module.title} Module</Text><Text style={s.moduleDescription}>{module.enabled ? module.selected.length+' features selected' : 'Optional services'}</Text></View><Ionicons name={module.enabled?'checkbox':'square-outline'} color={module.enabled?blue:'#94a3b8'} size={24}/></Pressable>
+              {module.enabled && <View style={s.featureList}>{module.items.map(item=><Pressable key={item.id} accessibilityRole="checkbox" accessibilityState={{checked:module.selected.includes(item.id)}} style={s.feature} onPress={()=>module.select(item.id)}><Ionicons name={module.selected.includes(item.id)?'checkbox':'square-outline'} size={21} color={module.selected.includes(item.id)?blue:'#94a3b8'}/><Text style={s.featureText}>{item.label}</Text></Pressable>)}</View>}
+            </View>)}
+            <Text style={s.moduleDescription}>Demo setup · Your choices last for this session.</Text>
+          </View>}
           {!workspace && <Pressable accessibilityRole="checkbox" accessibilityState={{ checked: remember }} onPress={() => setRemember(!remember)} style={s.remember}><View style={[s.checkbox, remember && { backgroundColor: blue, borderColor: blue }]}><Text style={{ color: 'white' }}>{remember ? '✓' : ''}</Text></View><Text style={s.rememberText}>Remember me for 30 days</Text></Pressable>}
           <Pressable accessibilityRole="button" style={({ pressed }) => [s.primary, workspace && s.workspacePrimary, pressed && { opacity: 0.8 }]} onPress={submit}><Text style={[s.primaryText, workspace && { fontSize: 20 }]}>{workspace ? 'Create Workspace' : 'Login'}</Text><Icon name={workspace ? 'rocket' : 'arrow'} color="white" size={26} /></Pressable>
         </View>
@@ -78,46 +90,58 @@ export default function AuthScreen({ workspace = false }: { workspace?: boolean 
   </KeyboardAvoidingView></SafeAreaView>;
 }
 const s = StyleSheet.create({
+  passwordToggle: { minWidth:44,minHeight:44,alignItems:'center',justifyContent:'center' },
+  moduleSection:{gap:12,marginBottom:22},
+  included:{flexDirection:'row',alignItems:'center',gap:10,padding:12,borderRadius:12,backgroundColor:'#edf4ff',flexWrap:'wrap'},
+  includedBadge:{fontSize:12,fontWeight:'600',color:blue},
+  moduleTitle:{fontSize:16,fontWeight:'600',color:'#22324b'},
+  moduleDescription:{fontSize:12,lineHeight:18,color:'#66758c'},
+  moduleCard:{borderWidth:1,borderColor:'#dce3ef',borderRadius:12,overflow:'hidden',backgroundColor:'#fafbfd'},
+  moduleSelected:{borderColor:'#6c9be9',backgroundColor:'#f3f7ff'},
+  moduleHeading:{flexDirection:'row',alignItems:'center',gap:10,padding:14,minHeight:64},
+  featureList:{paddingHorizontal:14,paddingBottom:10,borderTopWidth:1,borderColor:'#dce5f5'},
+  feature:{flexDirection:'row',alignItems:'center',gap:10,minHeight:44,paddingVertical:10},
+  featureText:{fontSize:14,color:'#344763',flex:1},
   safe: { flex: 1, backgroundColor: '#f7f8fa' },
   previews: { marginTop: 24, gap: 10 },
   previewLabel: { color: '#68758b', fontSize: 12, textAlign: 'center', marginBottom: 2 },
   previewButton: { minHeight: 48, paddingHorizontal: 14, paddingVertical: 12, borderWidth: 1, borderColor: '#d7dfec', borderRadius: 9, backgroundColor: '#f4f7ff', flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center', gap: 8 },
-  page: { padding: 20, paddingTop: 8, alignItems: 'center', flexGrow: 1 },
-  workspacePage: { paddingTop: 26 },
-  card: { width: '100%', maxWidth: 430, backgroundColor: 'white', borderWidth: 1, borderColor: '#d7dfec', borderRadius: 16, paddingHorizontal: 18, paddingTop: 38, paddingBottom: 36 },
-  workspaceCard: { maxWidth: 518, paddingHorizontal: 18, paddingTop: 30, paddingBottom: 46, borderColor: '#bec1d8' },
-  brand: { alignItems: 'center', marginBottom: 27 },
+  page: { padding: 16, paddingTop: 16, alignItems: 'center', flexGrow: 1 },
+  workspacePage: { paddingTop: 12 },
+  card: { width: '100%', maxWidth: 430, backgroundColor: 'white', borderWidth: 1, borderColor: '#d7dfec', borderRadius: 16, paddingHorizontal: 18, paddingTop: 28, paddingBottom: 24 },
+  workspaceCard: { maxWidth: 518, paddingHorizontal: 18, paddingTop: 24, paddingBottom: 24, borderColor: '#bec1d8' },
+  brand: { alignSelf: 'center', alignItems: 'center', justifyContent: 'center', width: 72, height: 72, borderRadius: 22, backgroundColor: '#eef4ff', marginBottom: 20 },
   title: { textAlign: 'center', fontSize: 30, fontWeight: '600', color: '#1d2021', letterSpacing: -0.7, marginBottom: 12 },
   workspaceTitle: { textAlign: 'left', fontWeight: '700' },
   subtitle: { textAlign: 'center', fontSize: 18, lineHeight: 25, color: '#484b60' },
   workspaceSubtitle: { textAlign: 'left', fontSize: 17, lineHeight: 25 },
-  form: { marginTop: 48 },
-  workspaceForm: { marginTop: 40 },
-  field: { marginBottom: 28 },
-  workspaceField: { marginBottom: 32 },
+  form: { marginTop: 28 },
+  workspaceForm: { marginTop: 28 },
+  field: { marginBottom: 20 },
+  workspaceField: { marginBottom: 20 },
   labelRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 6, marginBottom: 10, paddingHorizontal: 4 },
   label: { fontSize: 15, fontWeight: '600', letterSpacing: 0.5, color: '#484b60' },
   workspaceLabel: { fontSize: 16, fontWeight: '400', letterSpacing: 0, color: '#484b60' },
-  inputWrap: { minHeight: 60, flexDirection: 'row', alignItems: 'center', gap: 12, borderWidth: 1, borderColor: '#bec1d8', borderRadius: 10, backgroundColor: '#f2f3f5', paddingHorizontal: 14 },
-  workspaceInput: { minHeight: 58, backgroundColor: '#f7f8fa', borderRadius: 9 },
+  inputWrap: { minHeight: 54, flexDirection: 'row', alignItems: 'center', gap: 12, borderWidth: 1, borderColor: '#bec1d8', borderRadius: 10, backgroundColor: '#f2f3f5', paddingHorizontal: 14 },
+  workspaceInput: { minHeight: 54, backgroundColor: '#f7f8fa', borderRadius: 9 },
   focused: { borderColor: blue },
   input: { flex: 1, minWidth: 0, fontSize: 18, color: '#202326', minHeight: 52, paddingVertical: 12 },
   link: { color: '#0053e5', fontSize: 14, fontWeight: '600' },
   remember: { flexDirection: 'row', alignItems: 'center', gap: 12, marginBottom: 28 },
   checkbox: { width: 24, height: 24, borderWidth: 1, borderColor: '#bcc2db', borderRadius: 5, alignItems: 'center', justifyContent: 'center' },
   rememberText: { fontSize: 16, flex: 1, color: '#484b60' },
-  primary: { backgroundColor: blue, minHeight: 72, borderRadius: 10, alignItems: 'center', justifyContent: 'center', flexDirection: 'row', gap: 10, boxShadow: '0 3px 5px #00000022' },
-  workspacePrimary: { marginTop: 16, minHeight: 68, borderRadius: 14 },
+  primary: { backgroundColor: blue, minHeight: 56, borderRadius: 10, alignItems: 'center', justifyContent: 'center', flexDirection: 'row', gap: 10, boxShadow: '0 3px 5px #00000022' },
+  workspacePrimary: { marginTop: 16, minHeight: 56, borderRadius: 14 },
   primaryText: { color: 'white', fontSize: 25 },
-  divider: { flexDirection: 'row', alignItems: 'center', gap: 12, marginTop: 40, marginBottom: 38 },
+  divider: { flexDirection: 'row', alignItems: 'center', gap: 12, marginTop: 28, marginBottom: 24 },
   line: { height: 1, flex: 1, backgroundColor: '#bec3d9' },
   dividerText: { fontSize: 12, letterSpacing: 1.3, color: '#414558' },
   google: { flexDirection: 'row', gap: 10, alignItems: 'center', justifyContent: 'center', minHeight: 51, borderWidth: 1, borderColor: '#bcc2db', borderRadius: 9 },
   googleG: { color: '#4285f4', fontSize: 21, fontWeight: '700' },
   googleText: { fontSize: 15, fontWeight: '600', color: '#202326' },
-  footer: { flexDirection: 'row', justifyContent: 'center', flexWrap: 'wrap', marginTop: 48 },
+  footer: { flexDirection: 'row', justifyContent: 'center', flexWrap: 'wrap', marginTop: 28 },
   footerText: { fontSize: 13, color: '#373d53' },
-  back: { width: '100%', maxWidth: 518, flexDirection: 'row', alignItems: 'center', gap: 24, paddingHorizontal: 8, marginBottom: 28 },
+  back: { width: '100%', maxWidth: 518, flexDirection: 'row', alignItems: 'center', gap: 12, paddingHorizontal: 8, marginBottom: 28 },
   backText: { color: '#0053e5', fontSize: 23, fontWeight: '600' },
   options: { borderWidth: 1, borderColor: '#bec1d8', borderRadius: 8, marginTop: 8 },
   option: { padding: 14 },

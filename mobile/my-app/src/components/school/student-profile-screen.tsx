@@ -1,3 +1,4 @@
+import { SchoolMenuButton, SchoolBottomNav } from '@/components/school/school-navigation';
 import { Text, TextInput } from '@/components/responsive-text';
 import { useState } from 'react';
 import { router } from 'expo-router';
@@ -27,7 +28,7 @@ export default function StudentProfileScreen({ studentId }: { studentId: string 
   if (!profile) return <SafeAreaView style={s.safe}><View style={s.content}><Text style={s.title}>Student not found</Text><Text style={s.note}>This record is unavailable. Session-only students are cleared when the app restarts.</Text><Pressable accessibilityRole="button" style={s.button} onPress={back}><Text style={s.buttonText}>Back to Tasks</Text></Pressable></View></SafeAreaView>;
   const { student } = profile;
   return <SafeAreaView style={s.safe}>
-    <View style={s.header}><Pressable accessibilityRole="button" accessibilityLabel="Back to Tasks" onPress={back} style={s.iconButton}><Icon name="back"/></Pressable><Text style={s.title}>Student Information</Text></View>
+    <View style={s.header}><SchoolMenuButton/><Pressable accessibilityRole="button" accessibilityLabel="Back to Tasks" onPress={back} style={s.iconButton}><Icon name="back"/></Pressable><Text style={s.title}>Student Information</Text></View>
     <ScrollView contentContainerStyle={s.content}>
       <View style={[s.card, s.hero]}><View style={s.avatar}><Text style={s.initials}>{student.name.split(/\s+/).slice(0, 2).map(part => part[0]).join('')}</Text></View><Text style={s.name}>{student.name}</Text><Text style={s.id}>ID: {student.id}</Text><Pressable accessibilityRole="button" style={[s.button, s.edit]} onPress={() => { setDraft({ name: student.name, grade: student.grade, address: student.address, guardian: student.guardian, phone: student.phone, email: student.email }); setError(''); setEditing(true); }}><Icon name="edit" color="white" size={16}/><Text style={s.buttonText}>Edit Student</Text></Pressable></View>
       <View style={s.card}><Text style={s.sectionLabel}>PERSONAL DETAILS</Text><Detail label="DATE OF BIRTH"/><Detail label="GRADE / SECTION" value={student.grade}/><Detail label="ADDRESS" value={student.address}/></View>
@@ -36,7 +37,7 @@ export default function StudentProfileScreen({ studentId }: { studentId: string 
       <View style={s.card}><View style={s.row}><Text style={s.sectionTitle}>Fee History</Text><Text style={[s.badge, student.status === 'Paid' ? s.paid : s.pending]}>{student.status}</Text></View><Text style={s.note}>Fee status: {student.status}. Detailed payment history has not been provided.</Text></View>
       {!!notice && <Text accessibilityLiveRegion="polite" style={s.notice}>{notice}</Text>}<Text style={s.sample}>Sample records · Changes last for this session only</Text>
     </ScrollView>
-    <View style={s.nav}><Pressable accessibilityRole="button" style={s.navButton} onPress={() => router.replace('/school-dashboard')}><Icon name="dashboard"/><Text style={s.navText}>Dashboard</Text></Pressable><Pressable accessibilityRole="button" style={s.navButton} onPress={back}><Icon name="tasks"/><Text style={s.navText}>Tasks</Text></Pressable></View>
+    <SchoolBottomNav active="Profile"/>
     <Modal visible={editing} transparent animationType="fade" onRequestClose={() => setEditing(false)}><KeyboardAvoidingView style={s.overlay} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}><View style={s.dialog} accessibilityViewIsModal><View style={s.row}><Text style={s.sectionTitle}>Edit Student</Text><Pressable accessibilityRole="button" accessibilityLabel="Close edit" style={s.iconButton} onPress={() => setEditing(false)}><Icon name="close"/></Pressable></View><ScrollView keyboardShouldPersistTaps="handled"><Text style={s.note}>Changes apply to {student.id} for this demo session.</Text>{fields.map(([key, label]) => <View key={key}><Text style={s.label}>{label}</Text><TextInput accessibilityLabel={label} style={s.input} value={draft[key]} onChangeText={value => setDraft(previous => ({ ...previous, [key]: value }))} maxLength={key === 'address' ? 180 : 80} keyboardType={key === 'email' ? 'email-address' : key === 'phone' ? 'phone-pad' : 'default'} autoCapitalize={key === 'email' ? 'none' : 'words'}/></View>)}{!!error && <Text accessibilityRole="alert" style={s.error}>{error}</Text>}<Pressable accessibilityRole="button" style={s.button} onPress={save}><Text style={s.buttonText}>Save Changes</Text></Pressable></ScrollView></View></KeyboardAvoidingView></Modal>
   </SafeAreaView>;
 }

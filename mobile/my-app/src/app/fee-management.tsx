@@ -1,3 +1,4 @@
+import { SchoolMenuButton } from '@/components/school/school-navigation';
 import { Text } from '@/components/responsive-text';
 import { schoolTheme } from '@/components/school/theme';
 
@@ -14,7 +15,7 @@ export default function FeeManagementPage() {
     <SafeAreaView style={styles.container} edges={["top", "bottom"]}>
       <Stack.Screen options={{ headerShown: false }} />
 
-      <View style={styles.header}>
+      <View style={styles.header}><SchoolMenuButton/>
         <Pressable
           style={styles.backButton}
           onPress={() => router.back()}

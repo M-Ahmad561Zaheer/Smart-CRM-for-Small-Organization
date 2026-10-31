@@ -1,3 +1,5 @@
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { SchoolMenuButton, SchoolBottomNav } from '@/components/school/school-navigation';
 import { Text } from '@/components/responsive-text';
 import { schoolTheme } from '@/components/school/theme';
 
@@ -10,8 +12,8 @@ import ReportsScreen from '@/components/school/reports-screen';
 
 export default function ReportsPage() {
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.header}><SchoolMenuButton/>
         <Pressable onPress={() => router.back()}>
           <Ionicons name="arrow-back" size={20} color={schoolTheme.primary} />
         </Pressable>
@@ -29,8 +31,8 @@ export default function ReportsPage() {
         </Pressable>
       </View>
 
-      <ReportsScreen />
-    </View>
+      <View style={{flex:1}}><ReportsScreen /></View><SchoolBottomNav/>
+    </SafeAreaView>
   );
 }
 

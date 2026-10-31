@@ -4,7 +4,7 @@ import { Text as NativeText, TextInput as NativeTextInput, StyleSheet, useWindow
 // Modest width scaling keeps phones readable without oversized tablet headings.
 export function fontSizeForWidth(size: number, width: number) {
   const scale = Math.min(1.08, Math.max(0.94, width / 390));
-  return Math.round(Math.max(12, size * scale) * 10) / 10;
+  return Math.round(Math.max(12, size * scale) * 10) / 10 - 1;
 }
 
 export const Text = forwardRef<ComponentRef<typeof NativeText>, TextProps>(function ResponsiveText({ style, ...props }, ref) {
@@ -18,5 +18,5 @@ export const Text = forwardRef<ComponentRef<typeof NativeText>, TextProps>(funct
 export const TextInput = forwardRef<ComponentRef<typeof NativeTextInput>, TextInputProps>(function ResponsiveInput({ style, ...props }, ref) {
   const { width } = useWindowDimensions();
   const flat = StyleSheet.flatten(style);
-  return <NativeTextInput ref={ref} {...props} style={[{ minWidth: 0 }, style, { fontSize: Math.max(16, fontSizeForWidth(flat?.fontSize ?? 16, width)) }]} />;
+  return <NativeTextInput ref={ref} {...props} style={[{ minWidth: 0 }, style, { fontSize: Math.max(15, fontSizeForWidth(flat?.fontSize ?? 16, width)) }]} />;
 });

@@ -1,3 +1,4 @@
+import { SchoolBottomNav } from '@/components/school/school-navigation';
 import { Text } from '@/components/responsive-text';
 import { schoolTheme } from './theme';
 import { useFeeInvoices } from '../alerts-store';
@@ -153,10 +154,7 @@ export default function FeeManagementScreen() {
   const [filter, setFilter] = useState<
     "All" | "Paid" | "Pending" | "Overdue"
   >("All");
-  const [activeBottom, setActiveBottom] =
-    useState("Contacts");
-
-  const filteredInvoices = useMemo(() => {
+const filteredInvoices = useMemo(() => {
     return [...generated.map(item=>({id:item.id,client:item.student,date:item.due,status:"Pending" as const})),...invoices].filter((item) => {
       const matchesStatus =
         filter === "All" || item.status === filter;
@@ -197,15 +195,7 @@ export default function FeeManagementScreen() {
     );
   }
 
-  const bottomItems = [
-    { name: "Deals", icon: "layers-outline" },
-    { name: "Tasks", icon: "clipboard-outline" },
-    { name: "Contacts", icon: "people-outline" },
-    { name: "Leads", icon: "person-add-outline" },
-    { name: "More", icon: "ellipsis-horizontal" },
-  ] as const;
-
-  return (
+return (
     <View style={styles.container}>
       <ScrollView
         style={styles.scroll}
@@ -380,42 +370,7 @@ export default function FeeManagementScreen() {
       </ScrollView>
 
       {/* Screen-specific bottom navigation */}
-      <View style={styles.bottomNav}>
-        {bottomItems.map((item) => {
-          const selected =
-            activeBottom === item.name;
-
-          return (
-            <Pressable
-              key={item.name}
-              style={styles.bottomItem}
-              onPress={() => {
-                setActiveBottom(item.name);
-                if (item.name !== "Contacts") {
-                  showPlaceholder(item.name);
-                }
-              }}
-            >
-              <Ionicons
-                name={item.icon}
-                size={21}
-                color={
-                  selected ? C.primary : C.muted
-                }
-              />
-
-              <Text
-                style={[
-                  styles.bottomLabel,
-                  selected && styles.bottomActive,
-                ]}
-              >
-                {item.name}
-              </Text>
-            </Pressable>
-          );
-        })}
-      </View>
+      <SchoolBottomNav/>
     </View>
   );
 }
