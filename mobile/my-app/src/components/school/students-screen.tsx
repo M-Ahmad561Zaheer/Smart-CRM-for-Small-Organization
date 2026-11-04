@@ -1,3 +1,4 @@
+import AccountButton from '@/components/account-button';
 import { SchoolMenuButton, SchoolBottomNav } from '@/components/school/school-navigation';
 import { Text, TextInput } from '@/components/responsive-text';
 import { useState } from 'react';
@@ -36,7 +37,7 @@ export default function StudentsScreen() {
   const filterCount = Number(grade !== 'All') + Number(status !== 'All');
   const filtered = students.filter(student => (student.name.toLowerCase().includes(query.trim().toLowerCase()) || student.id.toLowerCase().includes(query.trim().toLowerCase())) && (grade === 'All' || student.grade === grade) && (status === 'All' || student.status === status));
   function clear() { setQuery(''); setGrade('All'); setStatus('All'); }
-  function openAdd() { setName(''); setId(''); setNewGrade('10th'); setNewStatus('Pending'); setError(''); setPanel('Add New Student'); }
+  function openAdd() { router.push('/admission'); }
   function submit() {
     if (!name.trim() || !id.trim()) { setError('Enter a student name and ID.'); return; }
     if (!/^[a-z0-9-]+$/i.test(id.trim())) { setError('Use letters, numbers, or hyphens for the ID.'); return; }
@@ -44,7 +45,7 @@ export default function StudentsScreen() {
     clear(); setPanel(null); setNotice(name.trim() + ' added to this demo session.');
   }
   return <SafeAreaView style={s.safe}>
-    <View style={s.header}><SchoolMenuButton/><Pressable accessibilityRole="button" accessibilityLabel="Back to dashboard" style={s.iconButton} onPress={() => router.replace('./school-dashboard')}><Icon name="back" color="#414b56" /></Pressable><Text accessibilityRole="header" style={s.title}>School Management</Text><Pressable accessibilityRole="button" accessibilityLabel="Open student profiles" style={s.avatar} onPress={() => router.push('/profile')}><Text style={s.avatarText}>SA</Text></Pressable></View>
+    <View style={s.header}><SchoolMenuButton/><Pressable accessibilityRole="button" accessibilityLabel="Back to dashboard" style={s.iconButton} onPress={() => router.replace('./school-dashboard')}><Icon name="back" color="#414b56" /></Pressable><Text accessibilityRole="header" style={s.title}>School Management</Text><AccountButton/></View>
     <FlatList data={filtered} keyExtractor={item => item.id} keyboardShouldPersistTaps="handled" contentContainerStyle={s.content}
       ListHeaderComponent={<>
         <View style={s.search}><Icon name="search" color="#687185" size={21} /><TextInput accessibilityLabel="Search students by name or ID" style={s.searchInput} placeholder="Search students by name or ID..." placeholderTextColor="#7e879b" value={query} onChangeText={setQuery} autoCorrect={false} autoCapitalize="none" clearButtonMode="while-editing" /></View>

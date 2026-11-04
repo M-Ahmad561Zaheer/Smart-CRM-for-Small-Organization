@@ -1,24 +1,20 @@
+import FacilitySummary from '../facility-summary';
+import AccountButton from '../account-button';
+import { RevenueChart, StudentGrowth } from './school-analytics';
+import Icon from './school-icon';
 import { SchoolBottomNav } from '@/components/school/school-navigation';
 import { Text } from '@/components/responsive-text';
 import WorkspaceMenu from '../workspace-menu';
 import { useWorkspace } from '../workspace-store';
 import { useRef, useState } from 'react';
 import type { ComponentRef } from 'react';
-import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import { useWindowDimensions, Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import icons from './icons.json';
 import data from './demo-data.json';
 
 
 const blue = '#0050d5';
-type IconName = keyof typeof icons;
-function Icon({ name, color = blue, size = 22 }: { name: string; color?: string; size?: number }) {
-  const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="' + color + '" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="' + icons[name as IconName] + '"/></svg>';
-  return <Image source={{ uri: 'data:image/svg+xml;utf8,' + encodeURIComponent(svg) }} style={{ width: size, height: size }} accessibilityElementsHidden />;
-}
-const ringSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180"><circle cx="90" cy="90" r="72" fill="none" stroke="#ebedef" stroke-width="14"/><circle cx="90" cy="90" r="72" fill="none" stroke="#064bcb" stroke-width="14" stroke-dasharray="47 66" transform="rotate(-108 90 90)"/></svg>';
 const sections: Record<string, string[]> = data.sections;
 
 export default function SchoolDashboard() {
@@ -63,7 +59,7 @@ function open(name: string) {
     return;
   }
 
-  if (name === 'Profile') { setPanel(null); router.push('/profile'); return; }
+  if (name === 'Profile') { setPanel(null); router.push('/settings'); return; }
 
   // Existing modal functionality
   setPanel(name);
@@ -73,30 +69,16 @@ function open(name: string) {
   return <SafeAreaView style={s.safe}>
     <View style={s.header}>
       <Pressable accessibilityRole="button" accessibilityLabel="Open menu" style={s.iconButton} onPress={() => open('Menu')}><Icon name="menu" /></Pressable>
-      <Text accessibilityRole="header" style={s.headerTitle}>School Management</Text>
-      <Pressable accessibilityRole="button" accessibilityLabel="Open student profiles" style={s.avatar} onPress={() => open('Profile')}><Text style={s.avatarText}>SA</Text></Pressable>
+      <Text accessibilityRole="header" style={s.headerTitle}>Workspace</Text>
+      <AccountButton/>
     </View>
     <ScrollView ref={scroll} contentContainerStyle={s.content}>
       <Text style={s.caption}>{workspace.name} · School workspace</Text>
-      {(workspace.gym || workspace.barber) && <View style={s.moduleSwitcher}>
-        <Text style={s.moduleCaption}>WORKSPACE MODULES</Text>
-        <View style={s.moduleRow}>
-          {workspace.gym && <Pressable accessibilityRole="button" accessibilityLabel="Open Gym module navigation" style={s.moduleButton} onPress={()=>setPanel('Gym Module')}><Icon name="gym"/><View style={s.moduleInfo}><Text style={s.moduleName}>Gym</Text><Text style={s.caption}>{workspace.features.length} services</Text></View><Text style={s.link}>⌄</Text></Pressable>}
-          {workspace.barber && <Pressable accessibilityRole="button" accessibilityLabel="Open Barber module navigation" style={s.moduleButton} onPress={()=>setPanel('Barber Module')}><Icon name="barber"/><View style={s.moduleInfo}><Text style={s.moduleName}>Barber</Text><Text style={s.caption}>{workspace.barberFeatures.length} services</Text></View><Text style={s.link}>⌄</Text></Pressable>}
-        </View>
-      </View>}
+      <FacilitySummary/>
       <View style={s.stats}>{data.stats.map((stat, index) => <View style={[s.stat, compact && { width: '100%' }]} key={stat.label}><Text style={s.statLabel}>{stat.label}</Text><View style={s.statValueRow}><Text style={[s.statValue, index === 2 && { color: '#d70719' }]}>{stat.value}</Text><Icon name={stat.icon} color={index === 2 ? '#d70719' : '#087c8d'} /></View></View>)}</View>
       <View style={s.actions}><Text style={s.actionsTitle}>QUICK ACTIONS</Text><View style={s.actionRow}>{data.actions.map((action, index) => <Pressable accessibilityRole="button" style={s.action} key={action.label} onPress={() => open(action.label)}><View style={[s.actionIcon, index === 0 && s.selectedAction]}><Icon name={action.icon} color={index === 0 ? 'white' : blue} /></View><Text style={s.actionLabel}>{action.label}</Text></Pressable>)}</View></View>
-      <View style={s.panel}>
-        <View style={s.panelHeading}><View><Text accessibilityRole="header" style={s.panelTitle}>Revenue Trend</Text><Text style={s.caption}>{period === 'monthly' ? 'Last 6 Months' : 'This Week'}</Text></View><Pressable accessibilityRole="button" accessibilityLabel={'Revenue period: ' + period + '. Change period'} style={s.period} onPress={() => setPanel('Revenue period')}><Text style={s.periodText}>{period === 'monthly' ? 'Monthly' : 'Weekly'}⌄</Text></Pressable></View>
-        <View style={s.bars}>{series.values.map((value, index) => <Pressable key={series.labels[index]} accessibilityRole="button" accessibilityLabel={series.labels[index] + ': $' + value + 'K'} accessibilityState={{ selected: selected === index }} onPress={() => setSelected(index)} style={s.barColumn}><View style={[s.bar, { height: (value / Math.max(...series.values) * 86) + '%', backgroundColor: selected === index ? '#064bcb' : '#cdddf8' }]}>{selected === index && <View style={s.tooltip}><Text style={s.tooltipText}>{index === 5 ? 'Current' : series.labels[index]}:{'\n'}${value.toFixed(1)}K</Text></View>}</View><Text style={s.barLabel}>{series.labels[index]}</Text></Pressable>)}</View>
-      </View>
-      <View style={[s.panel, s.growth]}>
-        <Text accessibilityRole="header" style={s.panelTitle}>Student Growth</Text><Text style={s.caption}>Active Enrolments</Text>
-        <View style={s.ring} accessible accessibilityLabel="Student growth 12 percent. Target met. 24 new students and 96 returning."><Image source={{ uri: 'data:image/svg+xml;utf8,' + encodeURIComponent(ringSvg) }} style={StyleSheet.absoluteFill} /><View style={s.ringLabel}><Text style={s.growthValue}>+12%</Text><Text style={s.target}>Target met</Text></View></View>
-        <View style={s.legendRow}><View style={s.legendLabel}><View style={s.dot} /><Text style={s.legendText}>New</Text></View><Text style={s.legendText}>24</Text></View>
-        <View style={s.legendRow}><View style={s.legendLabel}><View style={[s.dot, { backgroundColor: '#ebedef' }]} /><Text style={s.legendText}>Returning</Text></View><Text style={s.legendText}>96</Text></View>
-      </View>
+      <RevenueChart series={series} period={period} selected={selected} onSelect={setSelected} onPeriod={()=>setPanel('Revenue period')}/>
+      <StudentGrowth/>
       <View style={[s.panel, s.schedule]} onLayout={event => { scheduleY.current = event.nativeEvent.layout.y; }}>
         <View style={s.panelHeading}><Text accessibilityRole="header" style={s.panelTitle}>Today’s Schedule</Text><Pressable accessibilityRole="button" hitSlop={10} onPress={() => setExpanded(!expanded)}><Text style={s.link}>{expanded ? 'Show Less' : 'View All'}</Text></Pressable></View>
         <View style={s.lessons}>{data.schedule.slice(0, expanded ? 8 : 3).map(lesson => <View style={s.lesson} key={lesson.title}><View style={s.lessonIcon}><Icon name={lesson.icon} color="#007c91" /></View><View style={s.lessonInfo}><Text style={s.lessonTitle}>{lesson.title}</Text><Text style={s.lessonTime}>{lesson.time} • {lesson.room}</Text></View><Text style={[s.badge, lesson.status === 'Active' && s.activeBadge]}>{lesson.status}</Text></View>)}</View>
@@ -167,7 +149,7 @@ const s = StyleSheet.create({
   legendLabel: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   dot: { width: 12, height: 12, borderRadius: 6, backgroundColor: blue },
   legendText: { fontSize: 14, color: '#171b22' },
-  schedule: { marginTop: 112 },
+  schedule: { marginTop: 20 },
   link: { color: blue, fontSize: 12 },
   lessons: { marginTop: 16 },
   lesson: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 16, borderTopWidth: 1, borderColor: '#e0e4eb' },

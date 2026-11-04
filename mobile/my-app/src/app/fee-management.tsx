@@ -1,3 +1,4 @@
+import AccountButton from '@/components/account-button';
 import { SchoolMenuButton } from '@/components/school/school-navigation';
 import { Text } from '@/components/responsive-text';
 import { schoolTheme } from '@/components/school/theme';
@@ -44,16 +45,7 @@ export default function FeeManagementPage() {
           />
         </Pressable>
 
-        <Pressable
-          accessibilityLabel="Open student profiles" onPress={() => router.push('/profile')}
-          style={styles.iconButton}
-        >
-          <Ionicons
-            name="person-circle-outline"
-            size={21}
-            color={schoolTheme.primary}
-          />
-        </Pressable>
+        <AccountButton/>
       </View>
 
       <FeeManagementScreen />

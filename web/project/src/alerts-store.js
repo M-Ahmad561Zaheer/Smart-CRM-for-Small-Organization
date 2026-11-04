@@ -34,7 +34,7 @@ export function generateFeeInvoice(input) {
         return 'Enter a valid due date (YYYY-MM-DD).';
     const eventId = `invoice:${input.studentId}:${input.due}:${Number(input.amount).toFixed(2)}:${input.contact.trim().toLowerCase()}`;
     if (!invoices.some(i => i.eventId === eventId))
-        invoices = [{ id: `INV-${invoices.length + 1}`, eventId, student: input.studentName, parent: input.parent, contact: input.contact, amount: Number(input.amount).toFixed(2), due: input.due }, ...invoices];
+        invoices = [{ id: `INV-${invoices.length + 1}`, eventId, studentId: input.studentId, student: input.studentName, parent: input.parent, contact: input.contact, amount: Number(input.amount).toFixed(2), due: input.due }, ...invoices];
     queueAlert({ eventId, module: 'school', type: 'Fee Reminder', recipient: input.parent.trim(), contact: input.contact.trim(), channel: input.contact.includes('@') ? 'Email' : 'SMS', message: `Fee invoice for ${input.studentName} (${input.studentId}): $${Number(input.amount).toFixed(2)}, due ${input.due}. Recipient: ${input.parent.trim()}.` });
     return '';
 }
