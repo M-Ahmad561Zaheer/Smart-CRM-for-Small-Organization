@@ -9,7 +9,7 @@ const destinations = [
   { label: 'Dashboard', icon: 'dashboard', route: '/school-dashboard' },
   { label: 'Tasks', icon: 'tasks', route: '/students' },
   { label: 'Alerts', icon: 'alerts', route: '/alerts' },
-  { label: 'Profile', icon: 'profile', route: '/profile' },
+  { label: 'Profile', icon: 'profile', route: '/settings' },
 ] as const;
 
 export function SchoolBottomNav({active}:{active?:typeof destinations[number]['label']}) {

@@ -3,7 +3,7 @@ export type AlertModule = 'school' | 'gym' | 'barber';
 export type AlertType = 'Fee Reminder' | 'Membership Reminder' | 'Appointment Reminder';
 export type AlertEntry = { id:string; eventId:string; module:AlertModule; type:AlertType; recipient:string; contact:string; message:string; channel:'SMS'|'Email'|'WhatsApp'; status:'Sent'|'Pending'|'Failed'; createdAt:string; sample?:boolean; read?:boolean };
 let sequence=0;
-export type FeeInvoice={id:string;eventId:string;student:string;parent:string;contact:string;amount:string;due:string};
+export type FeeInvoice={id:string;eventId:string;studentId:string;student:string;parent:string;contact:string;amount:string;due:string};
 let invoices:FeeInvoice[]=[];
 let entries:AlertEntry[] = [
   {id:'sample-fee',eventId:'sample-fee',module:'school',type:'Fee Reminder',recipient:'Parent of Sarah Jenkins',contact:'Sample recipient',message:'Tuition fees for Sarah Jenkins (Grade 4) are due tomorrow.',channel:'SMS',status:'Sent',createdAt:'2026-10-28T09:00:00',sample:true},
@@ -32,7 +32,7 @@ export function generateFeeInvoice(input:{studentId:string;studentName:string;pa
   const due=new Date(`${input.due}T12:00:00`);
   if(!/^\d{4}-\d{2}-\d{2}$/.test(input.due)||Number.isNaN(due.getTime())||due.getFullYear()!==Number(input.due.slice(0,4))||due.getMonth()+1!==Number(input.due.slice(5,7))||due.getDate()!==Number(input.due.slice(8)))return 'Enter a valid due date (YYYY-MM-DD).';
   const eventId=`invoice:${input.studentId}:${input.due}:${Number(input.amount).toFixed(2)}:${input.contact.trim().toLowerCase()}`;
-  if(!invoices.some(i=>i.eventId===eventId))invoices=[{id:`INV-${invoices.length+1}`,eventId,student:input.studentName,parent:input.parent,contact:input.contact,amount:Number(input.amount).toFixed(2),due:input.due},...invoices];
+  if(!invoices.some(i=>i.eventId===eventId))invoices=[{id:`INV-${invoices.length+1}`,eventId,studentId:input.studentId,student:input.studentName,parent:input.parent,contact:input.contact,amount:Number(input.amount).toFixed(2),due:input.due},...invoices];
   queueAlert({eventId,module:'school',type:'Fee Reminder',recipient:input.parent.trim(),contact:input.contact.trim(),channel:input.contact.includes('@')?'Email':'SMS',message:`Fee invoice for ${input.studentName} (${input.studentId}): $${Number(input.amount).toFixed(2)}, due ${input.due}. Recipient: ${input.parent.trim()}.`});return '';
 }
 

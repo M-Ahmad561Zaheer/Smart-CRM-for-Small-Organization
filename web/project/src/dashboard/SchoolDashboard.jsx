@@ -31,6 +31,8 @@ export default function SchoolDashboard() {
   const [panel, setPanel] = useState(null)
   const series = data[period]
   function open(name) {
+    if(name==='Profile'){location.hash='#school-settings';return}
+    if(name==='Alerts'){location.hash='#school-alerts';return}
     if (name === 'Students' || name === 'Tasks') { location.hash = '#students'; return }
     if (name === 'Fee Mgt') { location.hash = '#school-fees'; return }
     if (name === 'Reports') { location.hash = '#school-reports'; return }

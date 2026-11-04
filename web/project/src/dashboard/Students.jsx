@@ -29,7 +29,7 @@ export default function Students() {
   const [notice, setNotice] = useState('')
   const filterCount = Number(grade !== 'All') + Number(status !== 'All')
   const filtered = students.filter(student => (student.name.toLowerCase().includes(query.trim().toLowerCase()) || student.id.toLowerCase().includes(query.trim().toLowerCase())) && (grade === 'All' || student.grade === grade) && (status === 'All' || student.status === status))
-  function openAdd() { setError(''); setPanel('Add New Student') }
+  function openAdd() { location.hash = '#school-admission' }
   function submit(event) {
     event.preventDefault()
     const fields = new FormData(event.currentTarget)
@@ -41,7 +41,7 @@ export default function Students() {
     setNotice(name + ' added to this demo session.')
   }
   return <div className="school-shell students-shell">
-    <header className="school-header"><div className="school-header-inner"><a className="school-icon-button student-back" href="#school-dashboard" aria-label="Back to dashboard"><Icon name="back" /></a><h1>School Management</h1><button className="school-avatar" aria-label="Open administrator profile" onClick={() => setPanel('Profile')}>SA</button></div></header>
+    <header className="school-header"><div className="school-header-inner"><a className="school-icon-button student-back" href="#school-dashboard" aria-label="Back to dashboard"><Icon name="back" /></a><h1>School Management</h1><button className="school-avatar" aria-label="Open administrator profile" onClick={() => {location.hash='#school-settings'}}>SA</button></div></header>
     <main className="students-main">
       <div className="student-tools"><div className="student-search"><Icon name="search" size={21} /><input type="search" aria-label="Search students by name or ID" placeholder="Search students by name or ID..." value={query} onChange={event => setQuery(event.target.value)} /></div><button className="student-filter" onClick={() => { setDraftGrade(grade); setDraftStatus(status); setPanel('Filter Students') }}><Icon name="filter" size={20} />Filter{filterCount ? ' (' + filterCount + ')' : ''}</button></div>
       <section className="student-overview" aria-label="Student summary">

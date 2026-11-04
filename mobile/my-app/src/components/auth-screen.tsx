@@ -1,6 +1,7 @@
+import { getAccount, saveAccount } from './account-store';
 import { Ionicons } from '@expo/vector-icons';
 import { Text, TextInput } from '@/components/responsive-text';
-import { barberFeatures, type BarberFeature, gymFeatures, saveWorkspace, type GymFeature } from './workspace-store';
+import { saveWorkspace } from './workspace-store';
 import { useState } from 'react';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
@@ -42,17 +43,13 @@ export default function AuthScreen({ workspace = false }: { workspace?: boolean 
   const [owner, setOwner] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [barber, setBarber] = useState(false);
-  const [barberSelection, setBarberSelection] = useState<BarberFeature[]>([]);
-  const [gym, setGym] = useState(false);
-  const [features, setFeatures] = useState<GymFeature[]>([]);
   const [remember, setRemember] = useState(false);
   const [notice, setNotice] = useState('');
   function submit() {
     if (workspace && (!business.trim() || !owner.trim())) { setNotice('Please enter your business name and owner name.'); return; }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) { setNotice('Please enter a valid email address.'); return; }
     if (!password || (workspace && password.length < 8)) { setNotice(workspace ? 'Use at least 8 characters for your password.' : 'Please enter your password.'); return; }
-    if (workspace) { if (!saveWorkspace(business, gym, features, barber, barberSelection)) { setNotice('Select at least one feature for each enabled module.'); return; } router.replace('/school-dashboard'); return; }
+    if (workspace) { if (!saveWorkspace(business)) { setNotice('Select at least one feature for each enabled module.'); return; } saveAccount({...getAccount(),name:owner.trim(),email:email.trim()}); router.replace('/school-dashboard'); return; }
     setNotice(workspace ? 'Your workspace details are ready. Workspace creation will be available when the service is connected.' : 'Your details are ready. Sign-in will be available when the service is connected.');
   }
   return <SafeAreaView style={s.safe}><KeyboardAvoidingView style={s.safe} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
@@ -61,21 +58,12 @@ export default function AuthScreen({ workspace = false }: { workspace?: boolean 
       <View style={[s.card, workspace && s.workspaceCard]}>
         {!workspace && <View style={s.brand}><Icon name="brand" size={42} /></View>}
         <Text accessibilityRole="header" style={[s.title, workspace && s.workspaceTitle]}>{workspace ? 'Workspace Setup' : 'Welcome Back'}</Text>
-        <Text style={[s.subtitle, workspace && s.workspaceSubtitle]}>{workspace ? 'Set up your school and choose the services you need.' : 'Sign in to manage your school, team and services.'}</Text>
+        <Text style={[s.subtitle, workspace && s.workspaceSubtitle]}>{workspace ? 'Set up your school with Gym and Barber services included.' : 'Sign in to manage your school, team and services.'}</Text>
         <View style={[s.form, workspace && s.workspaceForm]}>
           {workspace && <><Field workspace label="School Name" icon="store" placeholder="e.g. Sunrise School" value={business} onChange={setBusiness} /><Field workspace label="Owner Name" icon="user" placeholder="Full Name" value={owner} onChange={setOwner} /></>}
           <Field workspace={workspace} label="Email" icon="mail" placeholder={workspace ? 'name@business.com' : 'name@school.edu'} value={email} onChange={setEmail} email />
           <Field workspace={workspace} label="Password" icon="lock" placeholder={workspace ? 'Min. 8 characters' : '••••••••'} value={password} onChange={setPassword} password action={!workspace && <Pressable accessibilityRole="button" hitSlop={8} onPress={() => setNotice('Password recovery will be available when the service is connected.')}><Text style={s.link}>Forgot password?</Text></Pressable>} />
-          {workspace && <View style={s.moduleSection}>
-            <Text style={s.label}>Workspace modules</Text>
-            <View style={s.included}><Ionicons name="school-outline" size={24} color={blue}/><View style={{flex:1,gap:4}}><Text style={s.moduleTitle}>School Management</Text><Text style={s.moduleDescription}>Students, fees, reports and timetable</Text></View><Text style={s.includedBadge}>Included</Text></View>
-            <Text style={s.moduleDescription}>Add optional modules and select their features.</Text>
-            {[{id:'gym',title:'Gym',icon:'barbell-outline' as const,enabled:gym,toggle:()=>setGym(!gym),items:gymFeatures,selected:features as readonly string[],select:(id:string)=>setFeatures(previous=>previous.includes(id as GymFeature)?previous.filter(value=>value!==id):[...previous,id as GymFeature])},{id:'barber',title:'Barber',icon:'cut-outline' as const,enabled:barber,toggle:()=>setBarber(!barber),items:barberFeatures,selected:barberSelection as readonly string[],select:(id:string)=>setBarberSelection(previous=>previous.includes(id as BarberFeature)?previous.filter(value=>value!==id):[...previous,id as BarberFeature])}].map(module=><View key={module.id} style={[s.moduleCard,module.enabled && s.moduleSelected]}>
-              <Pressable accessibilityRole="checkbox" accessibilityLabel={'Add '+module.title+' module'} accessibilityState={{checked:module.enabled}} onPress={module.toggle} style={s.moduleHeading}><Ionicons name={module.icon} size={24} color={blue}/><View style={{flex:1,gap:3}}><Text style={s.moduleTitle}>{module.title} Module</Text><Text style={s.moduleDescription}>{module.enabled ? module.selected.length+' features selected' : 'Optional services'}</Text></View><Ionicons name={module.enabled?'checkbox':'square-outline'} color={module.enabled?blue:'#94a3b8'} size={24}/></Pressable>
-              {module.enabled && <View style={s.featureList}>{module.items.map(item=><Pressable key={item.id} accessibilityRole="checkbox" accessibilityState={{checked:module.selected.includes(item.id)}} style={s.feature} onPress={()=>module.select(item.id)}><Ionicons name={module.selected.includes(item.id)?'checkbox':'square-outline'} size={21} color={module.selected.includes(item.id)?blue:'#94a3b8'}/><Text style={s.featureText}>{item.label}</Text></Pressable>)}</View>}
-            </View>)}
-            <Text style={s.moduleDescription}>Demo setup · Your choices last for this session.</Text>
-          </View>}
+          {workspace && <View style={s.moduleSection}><Text style={s.label}>Included services</Text>{[{name:'School',icon:'school-outline' as const,detail:'Students, admission, fees and timetable'},{name:'Gym',icon:'barbell-outline' as const,detail:'Training sessions for students'},{name:'Barber',icon:'cut-outline' as const,detail:'Clients, appointments and services'}].map(item=><View key={item.name} style={s.included}><Ionicons name={item.icon} size={24} color={blue}/><View style={{flex:1,gap:4}}><Text style={s.moduleTitle}>{item.name}</Text><Text style={s.moduleDescription}>{item.detail}</Text></View><Text style={s.includedBadge}>Included</Text></View>)}<Text style={s.moduleDescription}>One overview, alerts and reports page for all services.</Text></View>}
           {!workspace && <Pressable accessibilityRole="checkbox" accessibilityState={{ checked: remember }} onPress={() => setRemember(!remember)} style={s.remember}><View style={[s.checkbox, remember && { backgroundColor: blue, borderColor: blue }]}><Text style={{ color: 'white' }}>{remember ? '✓' : ''}</Text></View><Text style={s.rememberText}>Remember me for 30 days</Text></Pressable>}
           <Pressable accessibilityRole="button" style={({ pressed }) => [s.primary, workspace && s.workspacePrimary, pressed && { opacity: 0.8 }]} onPress={submit}><Text style={[s.primaryText, workspace && { fontSize: 20 }]}>{workspace ? 'Create Workspace' : 'Login'}</Text><Icon name={workspace ? 'rocket' : 'arrow'} color="white" size={26} /></Pressable>
         </View>
